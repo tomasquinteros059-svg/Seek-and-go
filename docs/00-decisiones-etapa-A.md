@@ -37,7 +37,15 @@ Respuestas del cliente a las preguntas de la Etapa A. Este archivo manda sobre e
   - escribir un mensaje.
 - **Pagar por transferencia dentro de la app** queda para evaluar en la Etapa C, por costo y regulación.
 
+## Decisiones de la Etapa B
+- **Asistente de IA con dos modos, que elige cada administrador:**
+  - *Propone:* el asistente redacta y el administrador aprueba antes de enviar.
+  - *Responde solo:* el asistente contesta sin pedir aprobación.
+
+  En los dos modos todo queda registrado. Activar "responde solo" cuenta como la autorización explícita del administrador.
+- **El código de inicio de sesión llega por correo electrónico, no por SMS.**
+- Volumen de referencia para costos: **100 conductores**. Ver `03-costos-estimados.md`.
+
 ## Pendiente de confirmar
 1. Monto máximo de costo mensual.
-2. ¿El asistente de IA **responde solo** a los mensajes entrantes, o **propone** y el administrador aprueba? El prototipo muestra la segunda opción, que respeta la regla de que el asistente nunca escribe a un receptor sin que el administrador lo pida.
-3. El inicio de sesión con teléfono más código implica enviar un SMS con el código. Ese SMS tiene un costo pequeño por mensaje, que se calcula en la Etapa C.
+2. El receptor se registra solo con nombre y teléfono, pero el código de inicio de sesión ahora llega por correo. Hay que decidir si al receptor que instala la app también se le pide correo.
