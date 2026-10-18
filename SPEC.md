@@ -57,7 +57,7 @@ Versiones revisadas el 18 de octubre de 2026 en los registros oficiales de paque
 | Expo SDK | 58 (paquete 58.0.14, 16-oct-2026) | Recién salido. Usaremos la última versión de parche. |
 | React Native | 0.88.0 | Solo funciona con la "nueva arquitectura" desde la 0.82, así que no hay nada antiguo que migrar. |
 | expo-sqlite | 58.0.13 | Estable. |
-| Ubicación en segundo plano: `react-native-background-geolocation` (Transistorsoft) | 5.8.0 | Requiere licencia pagada solo para Android en producción. ⚠ precio |
+| Ubicación en segundo plano: `react-native-background-geolocation` (Transistorsoft) | 5.8.0 | Licencia **Starter: USD 399, pago único**, para 1 app; cubre Android e iOS en producción y la clave no vence. Soporte y actualizaciones opcionales: USD 199 al año. No se necesita el complemento de geocercas por polígono. |
 | Mapas en el móvil: `@maplibre/maplibre-react-native` | 11.5.0 | Funciona con Expo mediante dev build. |
 | Mapas en la web: `maplibre-gl` | 6.15.0 | Requiere WebGL2; todos los navegadores actuales lo tienen. |
 | `pmtiles` | 4.5.0 | Estable. |
@@ -116,7 +116,7 @@ Esta es la decisión del punto 5 del encargo.
   - ahorra batería: si el camión está detenido, mide menos seguido;
   - se recupera si el sistema cierra la app.
 
-  El costo es una licencia pagada, solo para Android en producción (⚠ precio a confirmar).
+  El costo es una licencia Starter de USD 399, pago único (cubre Android e iOS), más USD 199 al año de soporte opcional.
 - **Descartado: `expo-location`, que es gratis.** Se detiene si el sistema cierra la app, no guarda posiciones sin señal y no ahorra batería por movimiento. Con eso tendríamos que construir y probar a mano lo que el plugin ya resuelve.
 
 **Cómo funciona con cada sistema y cómo se le explica al conductor:**
@@ -522,7 +522,7 @@ La CI de GitHub corre todo lo automático en cada cambio. Ninguna fase se cierra
 | Hosting web (Cloudflare, plan gratis) | 0 |
 | Dominio .cl | ~1 |
 | **Mensual** | **~45** |
-| **Pagos únicos o anuales:** Apple $99 al año, Google Play $25 una vez, licencia del plugin de GPS ⚠ | — |
+| **Pagos únicos o anuales:** Apple $99 al año, Google Play $25 una vez, licencia del plugin de GPS USD 399 una vez (+ USD 199/año de soporte opcional) | — |
 
 ### 12.2 Con 10 administradores y 10 conductores cada uno (100 conductores, ~48.000 entregas al mes)
 | Servicio | USD/mes |
@@ -617,6 +617,6 @@ En cada fase:
 
 ## 17. Preguntas abiertas para aprobar esta especificación
 1. **Modelo de IA:** ¿Sonnet 5.5 + Haiku 5.5 (recomendado, ~$100 al mes con 100 conductores) u Opus 5.5 (más capaz, ~$300–500)?
-2. ~~Licencia del plugin de GPS~~ **Aprobada.**
+2. ~~Licencia del plugin de GPS~~ **Aprobada: Starter, USD 399, pago único.**
 3. **Nombre y dominio:** ¿cómo se llamará la app? Lo necesito para el dominio, las tiendas y los textos legales.
 4. ~~Abogado~~ **No por ahora; textos legales generados.** Falta saber si los conductores tienen contrato de trabajo o son independientes.
