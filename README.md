@@ -3,7 +3,7 @@
 App de reparto con seguimiento en tiempo real para administradores, conductores y receptores.
 
 ## Estado
-**Etapa B: caso real y prototipo.** Todavía no hay código de la app.
+**Etapa C: especificación (`SPEC.md`), esperando aprobación.** Todavía no hay código de la app.
 
 ## Contenido
 - `docs/00-decisiones-etapa-A.md`: respuestas del cliente a la revisión inicial.
