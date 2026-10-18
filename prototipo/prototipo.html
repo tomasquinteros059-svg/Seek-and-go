@@ -411,13 +411,27 @@ admin:[
    '<div class="card"><div class="lbl">Administradores</div><div class="list" style="margin-top:8px"><div class="row"><b>Carolina Fuentes</b>'+pill("Tú","y")+'</div><div class="row"><b>Rodrigo Paz</b>'+pill("Invitado","ok")+'</div></div><button class="btn" style="margin-top:12px">+ Invitar administrador</button>'+
    '<div class="lbl" style="margin-top:16px">Conductores</div><div class="list" style="margin-top:8px"><div class="row"><span><b>Matías Rojas</b><br><small style="color:var(--muted)">Licencia ✓ · Camión: no subido</small></span>'+pill("Activo","ok")+'</div></div></div></div>');}},
  {t:"Crear entrega", h:"Lunes 19:30", note:"Crear y asignar", txt:"Carolina crea la entrega, la asigna y decide si se cobra. El conductor no puede cambiar esto.", sys:"Si el teléfono del receptor ya tiene cuenta, la entrega aparece sola en su app. Si no, se genera un código.",
-  render:function(){return browser("Entregas",'<div class="ahead"><h4>Nueva entrega</h4>'+pill("Mañana · martes 14")+'</div><div class="cols"><div class="card" style="display:flex;flex-direction:column;gap:10px">'+
+  render:function(){return browser("Entregas",'<div class="ahead"><h4>Nueva entrega</h4>'+seg("modo",["Una por una","Subir archivo"],0)+'</div><div class="cols"><div class="card" style="display:flex;flex-direction:column;gap:10px">'+
    field("Receptor","Luis Bravo · +56 9 •••• 1190")+field("Dirección","Pje. Los Aromos 455, Puente Alto")+
    '<div class="cols" style="grid-template-columns:1fr 1fr">'+field("Sector","Sur")+field("Hora comprometida",'<span class="mono">11:45</span>')+'</div>'+
    field("Conductor","Matías Rojas")+'<div class="field"><label>Pago</label>'+seg("cobro",["Ya pagada","Cobrar en la entrega"],1)+'</div>'+
    '<div class="cols" style="grid-template-columns:1fr 1fr">'+field("Monto",'<span class="mono">$22.500</span>')+field("Forma aceptada","Efectivo")+'</div><button class="btn y" data-next>Crear entrega</button></div>'+
    '<div class="card"><div class="lbl">Entregas de mañana</div><div class="tw"><table class="t"><thead><tr><th>#</th><th>Receptor</th><th>Sector</th><th>Hora</th></tr></thead><tbody>'+
    E.map(function(e){return '<tr><td class="mono">'+e.n+'</td><td>'+e.who+'</td><td>'+e.sec+'</td><td class="mono">'+e.h+'</td></tr>';}).join("")+'</tbody></table></div></div></div>');}},
+ {t:"Subir archivo", h:"Lunes 19:20", note:"Muchas entregas de una vez", txt:"En vez de crear las entregas una por una, Carolina sube su planilla Excel o CSV del día. El sistema reconoce las columnas y muestra una vista previa antes de crear nada.", sys:"Revisa cada fila: ubica la dirección en el mapa, valida el teléfono y detecta duplicados. Las filas con problemas no se crean hasta corregirlas. Si una fila no trae conductor, se asigna según el sector.",
+  render:function(){return browser("Entregas",'<div class="ahead"><h4>Subir entregas desde archivo</h4>'+seg("modo2",["Una por una","Subir archivo"],1)+'</div><div class="cols"><div class="card" style="display:flex;flex-direction:column;gap:10px">'+
+   '<div class="field"><label>Archivo</label>'+photo("entregas_martes14.xlsx · 52 filas",true)+'</div>'+
+   '<p style="margin:0;font-size:13px;color:var(--muted)">Acepta Excel (.xlsx) y CSV. También sirve una planilla de Google exportada.</p><button class="btn" style="align-self:flex-start">Descargar plantilla</button>'+
+   '<div class="lbl" style="margin-top:6px">Columnas reconocidas</div><dl class="kv" style="margin:0;font-size:13px"><dt>Nombre cliente</dt><dd>→ Receptor</dd><dt>Fono</dt><dd>→ Teléfono</dd><dt>Dirección</dt><dd>→ Dirección</dd><dt>Comuna</dt><dd>→ Sector (automático)</dd><dt>Hora</dt><dd>→ Hora comprometida</dd><dt>Cobrar / Monto</dt><dd>→ Pago</dd><dt>Chofer</dt><dd>→ Conductor (opcional)</dd></dl>'+
+   '<div class="banner warn" style="margin-top:4px">'+ico("chat")+'<div><b>O pídeselo al asistente</b><p>«Carga este archivo y reparte las entregas por sector».</p></div></div></div>'+
+   '<div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row" style="flex-wrap:wrap;justify-content:flex-start">'+pill("49 listas","ok")+pill("2 por revisar","warn")+pill("1 con error","late")+'</div>'+
+   '<div class="tw"><table class="t"><thead><tr><th>Fila</th><th>Receptor</th><th>Comuna</th><th>Estado</th></tr></thead><tbody>'+
+   '<tr><td class="mono">2</td><td>Javiera Muñoz</td><td>Providencia</td><td>'+pill("Lista","ok")+'</td></tr>'+
+   '<tr><td class="mono">3</td><td>Pedro Álvarez</td><td>Ñuñoa</td><td>'+pill("Lista","ok")+'</td></tr>'+
+   '<tr><td class="mono">17</td><td>Marcela Díaz</td><td>Maipú</td><td>'+pill("Dirección no encontrada","warn")+'</td></tr>'+
+   '<tr><td class="mono">23</td><td>Felipe Rivas</td><td>La Reina</td><td>'+pill("Posible duplicado de fila 9","warn")+'</td></tr>'+
+   '<tr><td class="mono">40</td><td>Andrea Soto</td><td>Puente Alto</td><td>'+pill("Teléfono incompleto","late")+'</td></tr>'+
+   '</tbody></table></div><div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn y" data-next>Crear 49 entregas</button><button class="btn">Corregir 3 filas</button></div></div></div>');}},
  {t:"Asistente: códigos", h:"Lunes 19:35", note:"El asistente genera códigos", txt:"Carolina le pide en lenguaje natural los códigos de mañana. El asistente los crea, pero no envía nada.", sys:"Registro: «Carolina pidió generar 4 códigos · 19:35». Ella los manda por privado.",
   render:function(){return browser("Asistente",'<div class="ahead"><h4>Asistente</h4>'+pill("Solo actúa cuando tú lo pides","y")+'</div><div class="cols"><div class="card msgs">'+
    msg("Genera los códigos de seguimiento para las entregas de mañana.",1,"Carolina · 19:35")+
@@ -485,6 +499,8 @@ document.addEventListener("click",function(ev){
   if(t.dataset.go!==undefined){go(+t.dataset.go);return;}
   if(t.hasAttribute("data-next")||t.hasAttribute("data-fwd")||t.hasAttribute("data-alt")){go(idx+1);return;}
   if(t.hasAttribute("data-prev")){go(idx-1);return;}
+  if(t.dataset.seg==="modo"&&t.textContent==="Subir archivo"){go(idx+1);return;}
+  if(t.dataset.seg==="modo2"&&t.textContent==="Una por una"){go(idx-1);return;}
   if(t.dataset.seg){t.parentNode.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-pressed",String(b===t));});}
 });
 

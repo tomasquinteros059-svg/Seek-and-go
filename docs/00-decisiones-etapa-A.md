@@ -44,6 +44,7 @@ Respuestas del cliente a las preguntas de la Etapa A. Este archivo manda sobre e
 
   En los dos modos todo queda registrado. Activar "responde solo" cuenta como la autorización explícita del administrador.
 - **El código de inicio de sesión llega por correo electrónico, no por SMS.**
+- **Carga masiva de entregas:** el administrador puede subir un archivo Excel o CSV con todas las entregas del día. El sistema muestra una vista previa con las filas listas, las que hay que revisar y las que tienen error, antes de crear nada. También se le puede pedir al asistente.
 - Volumen de referencia para costos: **100 conductores**. Ver `03-costos-estimados.md`.
 
 ## Pendiente de confirmar
