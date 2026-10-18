@@ -207,10 +207,10 @@ Esta es la decisión del punto 5 del encargo.
   - En los correos solo hay códigos e información del servicio, nada de publicidad.
 
 ### 3.11 Asistente de IA: Claude API (sección 5)
-- **Recomendado:**
+- **Decidido por el cliente:**
   - **Claude Sonnet 5.5** ($2 / $10 por millón de tokens) para entender las órdenes del administrador y usar herramientas.
   - **Claude Haiku 5.5** ($0,10 / $0,50) para clasificar los mensajes que llegan y redactar borradores.
-- **Alternativa: Claude Opus 5.5** ($4 / $20). Es el modelo más capaz, pero cuesta 2 a 8 veces más en este uso. **La decisión es tuya** (ver preguntas al final).
+- **Descartado: Claude Opus 5.5** ($4 / $20). Es el modelo más capaz, pero cuesta 2 a 8 veces más en este uso. Se puede cambiar más adelante, porque el modelo es una configuración.
 
 ### 3.12 Estilo de programación: decisión explícita
 - **Estándar actual del ecosistema:** React y React Native se escriben con *funciones y composición* (componentes y "hooks"), no con clases. Las librerías esperan ese estilo.
@@ -457,17 +457,16 @@ Ya dibujadas en el prototipo. Esta es la lista definitiva para la versión 1.
   - *Términos y Política de privacidad:* se aceptan al crear la cuenta o al entrar con código. Se guarda la versión y la fecha.
   - *Ubicación del conductor:* consentimiento **explícito y separado**, con pantalla propia que explica para qué, cuándo (solo en ruta), quién la ve y cuánto tiempo se guarda. Se puede retirar, pero sin ubicación la empresa no puede asignarle rutas con seguimiento.
   - La ley no trata la geolocalización como dato "sensible", pero exige informar tipo, finalidad, tiempo y con quién se comparte.
-  - *Conductores con contrato de trabajo:*
-    - la Dirección del Trabajo exige que el control por GPS esté en el **Reglamento Interno** de la empresa;
-    - debe ser proporcional: solo en horario y para la función, nunca como vigilancia permanente;
-    - nuestra regla "solo entre iniciar y terminar ruta" cumple con eso;
-    - le entregaremos a cada empresa un texto modelo para su reglamento. ⚠ abogado
-  - *Conductores independientes:* podría aplicar la Ley 21.431 (plataformas digitales):
-    - confidencialidad de sus datos;
-    - acceso a sus datos y calificaciones en 15 días hábiles;
-    - prohibición de discriminar con decisiones automáticas.
-
-    **La app no califica conductores en la versión 1.** ⚠ abogado
+  - **Los conductores son independientes** (decisión del cliente). Por eso:
+    - **la base legal de la ubicación es su consentimiento expreso** y el contrato de servicio con cada empresa, no un Reglamento Interno;
+    - el conductor puede rechazar o retirar el permiso sin represalias, aunque sin ubicación la empresa puede no asignarle rutas con seguimiento;
+    - nuestra regla "solo entre iniciar y terminar ruta" respeta la proporcionalidad.
+  - **Ley 21.431 (trabajadores de plataformas digitales)** podría aplicar a las empresas que usen la app. Para cumplir desde el diseño:
+    - los datos del conductor son confidenciales y solo se usan para el servicio;
+    - el conductor puede **descargar sus datos**, incluido su historial de entregas, en un plazo de **15 días hábiles** o menos (el botón de descarga es inmediato);
+    - **la app no califica ni rankea conductores en la versión 1**, y no toma decisiones automáticas sobre ellos (asignar, suspender, pagar): las toma una persona;
+    - el asistente de IA tiene prohibido sugerir sanciones o comparar conductores entre sí.
+  - ⚠ Si una empresa contrata conductores con contrato de trabajo, esa empresa debe incluir el control por GPS en su Reglamento Interno. Se le avisa en los Términos.
 - **Derechos de las personas:** acceder, corregir, borrar, oponerse, llevarse sus datos (portabilidad) y bloquearlos.
   - Se responde en un plazo de **30 días**, prorrogable una vez.
   - En la app: "Mi cuenta → Descargar mis datos / Borrar mi cuenta".
@@ -616,7 +615,7 @@ En cada fase:
 ---
 
 ## 17. Preguntas abiertas para aprobar esta especificación
-1. **Modelo de IA:** ¿Sonnet 5.5 + Haiku 5.5 (recomendado, ~$100 al mes con 100 conductores) u Opus 5.5 (más capaz, ~$300–500)?
+1. ~~Modelo de IA~~ **Sonnet 5.5 + Haiku 5.5.**
 2. ~~Licencia del plugin de GPS~~ **Aprobada: Starter, USD 399, pago único.**
 3. **Nombre y dominio:** ¿cómo se llamará la app? Lo necesito para el dominio, las tiendas y los textos legales.
-4. ~~Abogado~~ **No por ahora; textos legales generados.** Falta saber si los conductores tienen contrato de trabajo o son independientes.
+4. ~~Abogado~~ **No por ahora; textos legales generados.** Los conductores son **independientes**.

@@ -53,8 +53,9 @@ Respuestas del cliente a las preguntas de la Etapa A. Este archivo manda sobre e
 - **Se aprueba la licencia Starter del plugin de GPS** (Transistorsoft): USD 399, pago único, cubre Android e iOS. Se compra al publicar en las tiendas; en desarrollo se usa gratis.
 - **Abogado:** no por ahora. Se generaron borradores de Términos y Condiciones, Política de Privacidad y el texto del consentimiento de ubicación en `docs/legal/`.
 
+- **Modelo de IA: Claude Sonnet 5.5 + Claude Haiku 5.5.** Sonnet entiende órdenes y usa herramientas; Haiku clasifica y redacta.
+- **Los conductores son independientes** (sin contrato de trabajo).
+
 ## Pendiente de confirmar
-1. Modelo de IA: Sonnet 5.5 + Haiku 5.5 (recomendado) u Opus 5.5.
-2. Nombre de la app y dominio.
-3. Los conductores, ¿tienen contrato de trabajo o son independientes?
-4. Datos de la empresa operadora para los textos legales: razón social, RUT, domicilio y correo de contacto.
+1. Nombre de la app y dominio.
+2. Datos de la empresa operadora para los textos legales: razón social, RUT, domicilio y correo de contacto.

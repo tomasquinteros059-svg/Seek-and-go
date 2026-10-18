@@ -96,7 +96,9 @@ Puedes pedir:
 - En la app: **Mi cuenta → Descargar mis datos / Borrar mi cuenta**.
 - Por correo a [CORREO DE PRIVACIDAD].
 
-Respondemos en un plazo de **30 días**, que podemos extender una vez por igual plazo avisándote. Si la solicitud corresponde a datos de una empresa, la coordinamos con ella.
+**Conductores:** puedes descargar en cualquier momento tus datos y tu historial de entregas desde la app. Si lo pides por correo, te respondemos en un máximo de **15 días hábiles**. La Plataforma no califica ni clasifica a los conductores, y no toma decisiones automáticas sobre ellos.
+
+Para las demás solicitudes, respondemos en un plazo de **30 días**, que podemos extender una vez por igual plazo avisándote. Si la solicitud corresponde a datos de una empresa, la coordinamos con ella.
 
 Si no estás conforme con la respuesta, puedes reclamar ante la **Agencia de Protección de Datos Personales** cuando esté en funcionamiento, o ante los tribunales.
 
