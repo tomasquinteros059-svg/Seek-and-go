@@ -49,5 +49,12 @@ Respuestas del cliente a las preguntas de la Etapa A. Este archivo manda sobre e
 - **El receptor que instala la app entrega nombre, teléfono y correo.** El correo sirve para recibir el código de inicio de sesión. El receptor que entra por la web con código no necesita cuenta.
 - **Presupuesto:** sin mínimo ni máximo fijo. El costo debe crecer en proporción a la cantidad de usuarios: arquitectura de costo fijo bajo y variable por uso.
 
+## Decisiones de la Etapa C
+- **Se aprueba pagar la licencia del plugin de GPS** (Transistorsoft, para Android en producción).
+- **Abogado:** no por ahora. Se generaron borradores de Términos y Condiciones, Política de Privacidad y el texto del consentimiento de ubicación en `docs/legal/`.
+
 ## Pendiente de confirmar
-Nada por ahora.
+1. Modelo de IA: Sonnet 5.5 + Haiku 5.5 (recomendado) u Opus 5.5.
+2. Nombre de la app y dominio.
+3. Los conductores, ¿tienen contrato de trabajo o son independientes?
+4. Datos de la empresa operadora para los textos legales: razón social, RUT, domicilio y correo de contacto.
