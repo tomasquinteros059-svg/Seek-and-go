@@ -46,7 +46,8 @@ Respuestas del cliente a las preguntas de la Etapa A. Este archivo manda sobre e
 - **El código de inicio de sesión llega por correo electrónico, no por SMS.**
 - **Carga masiva de entregas:** el administrador puede subir un archivo Excel o CSV con todas las entregas del día. El sistema muestra una vista previa con las filas listas, las que hay que revisar y las que tienen error, antes de crear nada. También se le puede pedir al asistente.
 - Volumen de referencia para costos: **100 conductores**. Ver `03-costos-estimados.md`.
+- **El receptor que instala la app entrega nombre, teléfono y correo.** El correo sirve para recibir el código de inicio de sesión. El receptor que entra por la web con código no necesita cuenta.
+- **Presupuesto:** sin mínimo ni máximo fijo. El costo debe crecer en proporción a la cantidad de usuarios: arquitectura de costo fijo bajo y variable por uso.
 
 ## Pendiente de confirmar
-1. Monto máximo de costo mensual.
-2. El receptor se registra solo con nombre y teléfono, pero el código de inicio de sesión ahora llega por correo. Hay que decidir si al receptor que instala la app también se le pide correo.
+Nada por ahora.
