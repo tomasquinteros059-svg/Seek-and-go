@@ -7,7 +7,7 @@ Versiones revisadas el 18 de octubre de 2026.
 - **El código lo escribo y lo ejecuto yo** en este entorno en la nube. Tú **no necesitas instalar herramientas de programación** ni usar la terminal.
 - **Tu parte:**
   - crear las cuentas, desde el navegador de tu tablet o computador;
-  - guardar las claves en la configuración del entorno (sección 4);
+  - guardar las claves como secretos de GitHub (sección 4);
   - instalar la app de prueba en tus teléfonos;
   - probar con las listas de aceptación.
 - **Equipos para probar:**
@@ -67,38 +67,25 @@ Ninguna CLI pide contraseña: inician sesión solas leyendo `SUPABASE_ACCESS_TOK
 
 ---
 
-## 4. Dónde van las claves (y por qué nunca en el chat)
-1. Abre el menú del **entorno en la nube**, en la barra de título de esta sesión, y toca **Edit**.
-2. En **Network secrets** (o **API credentials** / variables de entorno, según la versión de la app), agrega cada clave con **el nombre exacto** de la tabla de la sección 2.
-3. Guarda. **Una sesión nueva toma las claves.** Todo el contexto del proyecto está en el repositorio, así que en la sesión nueva basta con decir "seguimos con la Fase 0".
+## 4. Dónde van las claves: secretos de GitHub (decisión del cliente)
+Las claves se guardan como **secretos del repositorio en GitHub**.
+- **Enlace directo:** https://github.com/tomasquinteros059-svg/Seek-and-go/settings/secrets/actions
+- **Pasos:**
+  1. Abre el enlace y toca **New repository secret**.
+  2. En **Name**, escribe el nombre exacto, por ejemplo `SUPABASE_ACCESS_TOKEN`.
+  3. En **Secret**, pega el valor.
+  4. Toca **Add secret**.
+  5. Repite con cada clave.
+- **Cómo se usan:**
+  - yo escribo el código y lo subo a GitHub;
+  - **GitHub Actions** (los servidores de GitHub) ejecuta las tareas que necesitan claves: aplicar cambios a la base de datos, publicar la web y compilar la app con EAS;
+  - yo reviso el resultado y los registros desde aquí.
+- **Nadie puede volver a leer un secreto de GitHub**, ni siquiera tú: solo se puede reemplazar. Tampoco aparece en los registros, porque GitHub lo oculta con `***`.
 
-En el código, las claves se leen de un archivo `.env` que está en `.gitignore`, así que nunca se sube a GitHub. La revisión automática bloquea cualquier clave que se cuele.
+En el código, las claves para desarrollo local se leen de un archivo `.env` que está en `.gitignore`, así que nunca se sube.
 
-## 5. Acceso a internet del entorno
-Hoy el entorno solo llega a npm, GitHub y Anthropic. En la misma pantalla (**Network access**), deja el nivel **Limited**, mantén marcado **Allow package managers** y agrega en **Allowed domains**:
-
-```
-supabase.com
-api.supabase.com
-supabase.co
-expo.dev
-api.expo.dev
-u.expo.dev
-sentry.io
-ingest.sentry.io
-cloudflare.com
-api.cloudflare.com
-r2.cloudflarestorage.com
-download.geofabrik.de
-build.protomaps.com
-```
-Si la pantalla acepta comodines, agrega también `*.supabase.co`, `*.expo.dev` y `*.ingest.sentry.io`, porque cada proyecto usa su propio subdominio.
-
-Más adelante se agregan `getstream.io`, `stream-io-api.com`, `api.resend.com` y el proveedor de VPS.
-
-Guía oficial: https://code.claude.com/docs/en/cloud-environments#network-access
-
----
+## 5. Acceso a internet
+Con GitHub Actions **no hace falta cambiar el acceso a internet de este entorno**. Los servidores de GitHub llegan a Supabase, Expo, Sentry y Cloudflare sin restricciones.
 
 ## 6. Qué datos puedes pegar en el chat y cuáles nunca
 | ✅ Sí puedes pegar | ❌ Nunca pegues |
@@ -113,12 +100,11 @@ Para probar usaremos los datos ficticios del caso de Matías.
 ---
 
 ## 7. Lista para confirmar
-Cuando todo esté hecho, respóndeme "listo" (en una sesión nueva si agregaste claves):
+Cuando todo esté hecho, respóndeme "listo" (no hace falta abrir una sesión nueva):
 - [ ] Proyecto `reparto-dev` creado en Supabase, región São Paulo
 - [ ] Correos de prueba invitados como miembros de la organización de Supabase
 - [ ] Cuentas de Expo, Sentry y Cloudflare creadas
-- [ ] Claves guardadas en el entorno con estos nombres: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`, `SUPABASE_DB_PASSWORD`, `EXPO_TOKEN`, `SENTRY_AUTH_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
-- [ ] Dominios permitidos agregados (sección 5)
+- [ ] Claves guardadas como secretos de GitHub con estos nombres: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`, `SUPABASE_DB_PASSWORD`, `EXPO_TOKEN`, `SENTRY_AUTH_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
 - [ ] Teléfono Android a mano
 
 Con eso verifico todo con los comandos de la sección 3 y empiezo la **Fase 0**.
