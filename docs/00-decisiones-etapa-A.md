@@ -50,7 +50,7 @@ Respuestas del cliente a las preguntas de la Etapa A. Este archivo manda sobre e
 - **Presupuesto:** sin mínimo ni máximo fijo. El costo debe crecer en proporción a la cantidad de usuarios: arquitectura de costo fijo bajo y variable por uso.
 
 ## Decisiones de la Etapa C
-- **Se aprueba pagar la licencia del plugin de GPS** (Transistorsoft, para Android en producción).
+- **Se aprueba la licencia Starter del plugin de GPS** (Transistorsoft): USD 399, pago único, cubre Android e iOS. Se compra al publicar en las tiendas; en desarrollo se usa gratis.
 - **Abogado:** no por ahora. Se generaron borradores de Términos y Condiciones, Política de Privacidad y el texto del consentimiento de ubicación en `docs/legal/`.
 
 ## Pendiente de confirmar
