@@ -56,6 +56,9 @@ Respuestas del cliente a las preguntas de la Etapa A. Este archivo manda sobre e
 - **Modelo de IA: Claude Sonnet 5.5 + Claude Haiku 5.5.** Sonnet entiende órdenes y usa herramientas; Haiku clasifica y redacta.
 - **Los conductores son independientes** (sin contrato de trabajo).
 
+## Etapa C cerrada
+- **Especificación (`SPEC.md`) aprobada** por el cliente. El nombre de la app se define más adelante; mientras tanto se usa "Reparto".
+
 ## Pendiente de confirmar
 1. Nombre de la app y dominio.
 2. Datos de la empresa operadora para los textos legales: razón social, RUT, domicilio y correo de contacto.
