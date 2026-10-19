@@ -164,6 +164,16 @@ table.t td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:to
 .log{font-family:var(--f-mono);font-size:12px;display:flex;flex-direction:column;gap:6px}
 .log div{padding:6px 8px;background:var(--sunk);border-radius:6px}
 
+/* Modo app: solo la pantalla, a todo el ancho y alto */
+.ab .back{cursor:pointer;color:var(--ink);font-size:18px;line-height:1;padding:0}
+body.app .top,body.app .side,body.app .note,body.app .hazard{display:none}
+body.app .wrap{display:block;max-width:none;padding:0}
+body.app .stage{display:block}
+body.app .phone{width:100%;height:100vh;height:100dvh;max-height:none;min-height:0;border-radius:0;padding:0;box-shadow:none;background:var(--bg)}
+body.app .ph-in{border-radius:0}
+body.app .browser{border-radius:0;border:0;box-shadow:none}
+body.app .bbar{display:none}
+body.app .adm{min-height:100vh;min-height:100dvh}
 @media (max-width:900px){
   .wrap{grid-template-columns:minmax(0,1fr)}
   .steps{flex-direction:row;overflow-x:auto;padding-bottom:6px}
@@ -262,7 +272,7 @@ function map(o){
 
 /* Pantalla de teléfono */
 function phone(o){
-  var head = o.raw ? '' : '<div class="ab">'+(o.back?'<span class="back" aria-hidden="true">‹</span>':'')+'<div><h4>'+o.title+'</h4>'+(o.sub?'<div class="sub">'+o.sub+'</div>':'')+'</div></div>';
+  var head = o.raw ? '' : '<div class="ab">'+(o.back?'<button class="back" data-prev aria-label="Atrás">‹</button>':'')+'<div><h4>'+o.title+'</h4>'+(o.sub?'<div class="sub">'+o.sub+'</div>':'')+'</div></div>';
   var body = o.raw ? o.raw : '<div class="bd">'+o.body+'</div>';
   var act = o.cta ? '<div class="act"><button class="cta '+(o.ctaKind||"")+'" data-next>'+o.cta+'</button>'+(o.alt?'<button class="ghost" data-alt>'+o.alt+'</button>':'')+'</div>' : '';
   return '<div class="phone"><div class="ph-in"><div class="sb"><span>'+(o.time||"9:41")+'</span><span>'+(o.net||"4G ▮▮▮ 82%")+'</span></div>'+head+body+act+'</div></div>';
@@ -285,9 +295,9 @@ conductor:[
    field("Nombre completo","Matías Rojas Pérez")+field("Correo","matias.rojas@correo.cl")+field("Teléfono",'<span class="mono">+56 9 8765 4321</span>')+
    '<div class="field"><label>Foto de tu licencia de conducir</label>'+photo("Licencia clase B · subida",true)+'</div>'+
    '<div class="field"><label>Documentos del camión <span class="opt">(opcional)</span></label>'+photo("Toca para fotografiar permiso de circulación o revisión técnica")+'</div>',
-   cta:"Enviarme código por SMS"});}},
- {t:"Verificar teléfono", h:"Lunes · registro", note:"Sin contraseña", txt:"Entra con su teléfono y un código de 6 dígitos que llega por SMS. No hay contraseña que olvidar.", sys:"El código vence en 5 minutos y sirve una sola vez.",
-  render:function(){return phone({title:"Escribe el código",sub:"Lo enviamos al +56 9 •••• 4321",back:1,body:
+   cta:"Enviarme código por correo"});}},
+ {t:"Verificar teléfono", h:"Lunes · registro", note:"Sin contraseña", txt:"Entra con un código de 6 dígitos que llega a su correo. No hay contraseña que olvidar.", sys:"El código vence en 5 minutos y sirve una sola vez.",
+  render:function(){return phone({title:"Escribe el código",sub:"Lo enviamos a m•••@correo.cl",back:1,body:
    '<div class="otp"><div>4</div><div>8</div><div>2</div><div>0</div><div class="on">1</div><div></div></div><p style="color:var(--muted);font-size:13px;margin:0">¿No llegó? Reenviar en <span class="mono">0:42</span></p>',
    cta:"Verificar"});}},
  {t:"Permiso de ubicación", h:"Primera vez", note:"Consentimiento explícito", txt:"Antes de pedir el permiso del sistema, la app explica para qué y cuándo usa la ubicación. Es el consentimiento que exige la ley chilena.", sys:"Si Matías rechaza, puede usar la app igual, pero el administrador verá «sin ubicación» y no habrá avisos automáticos de llegada.",
@@ -370,11 +380,11 @@ receptor:[
    '<div class="code">RPT-4K7Q-92</div>'+field("Tu nombre","Sofía Contreras")+
    '<p style="font-size:13px;color:var(--muted);margin:0">Al continuar aceptas los <u>términos</u> y la <u>política de privacidad</u>.</p>',
    cta:"Ver mi paquete",alt:"Prefiero instalar la app"});}},
- {t:"Cuenta en la app", h:"Opcional", note:"Registro corto", txt:"Si instala la app, solo pide nombre y teléfono. Las entregas ligadas a ese teléfono aparecen sin buscarlas.", sys:"Si antes entró con código, la cuenta se une a ese mismo historial al verificar el teléfono.",
-  render:function(){return phone({title:"Crea tu cuenta",sub:"Solo dos datos",body:
-   field("Nombre completo","Javiera Muñoz Soto")+field("Teléfono",'<span class="mono">+56 9 1234 5678</span>')+
+ {t:"Cuenta en la app", h:"Opcional", note:"Registro corto", txt:"Si instala la app, solo pide nombre, teléfono y correo. Las entregas ligadas a ese teléfono aparecen sin buscarlas.", sys:"Si antes entró con código, la cuenta se une a ese mismo historial al verificar el teléfono.",
+  render:function(){return phone({title:"Crea tu cuenta",sub:"Solo tres datos",body:
+   field("Nombre completo","Javiera Muñoz Soto")+field("Teléfono",'<span class="mono">+56 9 1234 5678</span>')+field("Correo","javiera.munoz@correo.cl")+
    '<div class="card"><div class="lbl">Te avisaremos</div><p style="margin:6px 0 0">Cuando tu paquete salga, cuando esté cerca y cuando llegue.</p></div>',
-   cta:"Enviarme código por SMS"});}},
+   cta:"Enviarme código por correo"});}},
  {t:"Seguimiento", h:"10:30", note:"Solo su paquete", txt:"Sofía ve al conductor en el mapa y la hora estimada actualizada con el retraso. No ve otras entregas ni la ruta completa.", sys:"Solo se muestra la posición mientras el conductor va hacia ella.",
   render:function(){return phone({title:"Tu paquete va en camino",sub:"Despachos Cordillera · Conductor: Matías R.",time:"10:30",body:
    map({id:5,late:1,route:"M30 30 L30 110 L150 110 L150 190 L300 190",dest:[300,190],dur:30})+
@@ -482,7 +492,7 @@ admin:[
 ]};
 
 /* ---------- Estado y navegación ---------- */
-var role="conductor", idx=0, lock=false;
+var role="conductor", idx=0, lock=false, app=false;
 var stage=document.getElementById("stage"), steps=document.getElementById("steps");
 var titles={conductor:"Pantallas del conductor",receptor:"Pantallas del receptor",admin:"Panel del administrador"};
 
@@ -495,7 +505,7 @@ function draw(){
     '<div class="nav"><button data-prev '+(idx===0?'disabled':'')+'>‹ Anterior</button><button data-fwd>'+(idx===list.length-1?'Volver al inicio':'Siguiente ›')+'</button></div></div>';
   stage.innerHTML = role==="admin" ? note+sc.render() : sc.render()+note;
   try{localStorage.setItem("reparto-proto",JSON.stringify({role:role,idx:idx}));}catch(e){}
-  var tag=(lock?"solo-":"")+role;
+  var tag=(app?"app-":(lock?"solo-":""))+role;
   if(location.hash!=="#"+tag){try{history.replaceState(null,"","#"+tag);}catch(e){}}
 }
 function go(i){var n=S[role].length; idx=(i+n)%n; draw(); var c=steps.querySelector('[aria-current="true"]'); if(c&&steps.scrollWidth>steps.clientWidth){steps.scrollLeft=c.parentNode.offsetLeft-steps.offsetLeft-steps.clientWidth/2+c.offsetWidth/2;}}
@@ -515,6 +525,10 @@ document.addEventListener("click",function(ev){
 var h=(location.hash||"").slice(1);
 if(h.indexOf("solo-")===0&&S[h.slice(5)]){h=h.slice(5);lock=true;document.querySelector(".roles").hidden=true;}
 if(S[h]){role=h;} else {try{var st=JSON.parse(localStorage.getItem("reparto-proto")||"null"); if(st&&S[st.role]){role=st.role; idx=Math.min(st.idx||0,S[role].length-1);}}catch(e){}}
+document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===role));});
+var M=window.REPARTO_MODO||null;
+if(!M&&h.indexOf("app-")===0&&S[h.slice(4)]){M={rol:h.slice(4)};}
+if(M&&S[M.rol]){role=M.rol;idx=0;lock=true;app=true;document.body.classList.add("app");document.querySelector(".roles").hidden=true;}
 document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===role));});
 draw();
 })();

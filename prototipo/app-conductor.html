@@ -1,0 +1,529 @@
+<title>Reparto Conductor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: banda de marca arriba con selector de perfil; a la izquierda el recorrido de pantallas en orden; a la derecha el dispositivo (teléfono o navegador). En móvil, todo en una columna. Identidad: azul cordillera + amarillo de señalética vial. */
+:root{
+  --bg:#edf1f5; --surface:#ffffff; --sunk:#e3e9ef; --ink:#10212f; --muted:#566676; --line:#cfd8e1;
+  --brand:#143b5c; --brand-ink:#ffffff; --accent:#f2b705; --accent-ink:#1b1500;
+  --ok:#1d7f48; --ok-bg:#dff2e6; --warn:#b4530b; --warn-bg:#fcebd9; --late:#b42318; --late-bg:#fbe3e1;
+  --map:#e2e8ee; --map-block:#d2dbe3; --map-street:#ffffff; --map-river:#b8d3e8;
+  --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0a131b; --surface:#122029; --sunk:#0e1a22; --ink:#e6edf3; --muted:#91a3b3; --line:#243644;
+  --brand:#1d4a70; --brand-ink:#f1f6fa; --accent:#f6c430; --accent-ink:#1b1500;
+  --ok:#47c07d; --ok-bg:#12301f; --warn:#f19a55; --warn-bg:#3a2412; --late:#f26b61; --late-bg:#3b1715;
+  --map:#15232e; --map-block:#1c2d3a; --map-street:#284052; --map-river:#1f4560; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a131b; --surface:#122029; --sunk:#0e1a22; --ink:#e6edf3; --muted:#91a3b3; --line:#243644;
+  --brand:#1d4a70; --brand-ink:#f1f6fa; --accent:#f6c430; --accent-ink:#1b1500;
+  --ok:#47c07d; --ok-bg:#12301f; --warn:#f19a55; --warn-bg:#3a2412; --late:#f26b61; --late-bg:#3b1715;
+  --map:#15232e; --map-block:#1c2d3a; --map-street:#284052; --map-river:#1f4560; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* Banda superior */
+.top{background:var(--brand);color:var(--brand-ink)}
+.top-in{max-width:1180px;margin:0 auto;padding-block:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-stretch:125%;font-weight:800;font-size:22px;letter-spacing:.01em}
+.logo-mark{width:30px;height:30px;border-radius:7px;background:var(--accent);display:grid;place-items:center}
+.logo small{font-family:var(--f-mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.75;font-stretch:100%}
+.roles{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.roles button{border:1.5px solid color-mix(in srgb,var(--brand-ink) 35%,transparent);background:transparent;color:var(--brand-ink);padding:7px 14px;border-radius:999px;cursor:pointer;font-weight:700}
+.roles button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.hazard{height:6px;background:repeating-linear-gradient(-45deg,var(--accent) 0 12px,var(--brand) 12px 24px)}
+
+/* Cuerpo */
+.wrap{max-width:1180px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:290px minmax(0,1fr);gap:28px;align-items:start}
+.side h2{font-family:var(--f-display);font-stretch:112%;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;counter-reset:s}
+.steps button{width:100%;text-align:left;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:baseline;padding:8px 10px;border:0;border-radius:8px;background:transparent;cursor:pointer}
+.steps button:hover{background:var(--sunk)}
+.steps button[aria-current="true"]{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
+.steps .n{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.steps .t{font-weight:700;font-size:14px}
+.steps .h{grid-column:2;font-size:12px;color:var(--muted);font-family:var(--f-mono)}
+.legend{margin-top:18px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+
+.stage{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start;min-width:0}
+.stage.wide{grid-template-columns:minmax(0,1fr)}
+.note{min-width:0;max-width:44ch}
+.note .clock{font-family:var(--f-mono);font-size:13px;background:var(--accent);color:var(--accent-ink);display:inline-block;padding:2px 8px;border-radius:4px;font-weight:600}
+.note h3{font-family:var(--f-display);font-stretch:118%;font-weight:800;font-size:26px;line-height:1.1;margin:10px 0 8px;text-wrap:balance}
+.note p{margin:0 0 10px;color:var(--muted)}
+.note .sys{border-left:3px solid var(--brand);padding:8px 12px;background:var(--surface);border-radius:0 8px 8px 0;font-size:14px;color:var(--ink)}
+.note .sys b{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.nav{display:flex;gap:8px;margin-top:14px}
+.nav button{border:1.5px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+
+/* Teléfono */
+.phone{width:min(360px,100%);height:720px;max-height:82vh;min-height:560px;border-radius:38px;background:#0b1117;padding:10px;box-shadow:0 18px 40px -18px rgba(10,20,30,.45)}
+.ph-in{height:100%;border-radius:30px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;position:relative}
+.sb{display:flex;justify-content:space-between;padding:10px 22px 4px;font-family:var(--f-mono);font-size:12px;font-weight:600}
+.ab{display:flex;align-items:center;gap:10px;padding:8px 18px 10px}
+.ab .back{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:var(--surface);font-weight:700}
+.ab h4{margin:0;font-family:var(--f-display);font-stretch:112%;font-weight:800;font-size:19px;line-height:1.15}
+.ab .sub{font-size:12px;color:var(--muted)}
+.bd{flex:1;overflow:auto;padding:4px 18px 16px;display:flex;flex-direction:column;gap:12px}
+.act{padding:12px 18px 18px;background:var(--bg);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.cta{width:100%;border:2px solid var(--accent-ink);background:var(--accent);color:var(--accent-ink);font-family:var(--f-display);font-stretch:110%;font-weight:800;font-size:17px;padding:14px;border-radius:12px;cursor:pointer}
+.cta.danger{background:var(--late);color:#fff;border-color:var(--late)}
+.cta.dark{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.ghost{width:100%;border:0;background:transparent;color:var(--muted);font-weight:700;padding:4px;cursor:pointer;font-size:14px}
+
+/* Navegador (admin) */
+.browser{width:100%;border-radius:12px;background:var(--surface);border:1px solid var(--line);overflow:hidden;box-shadow:0 18px 40px -22px rgba(10,20,30,.4)}
+.bbar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--sunk);border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.dots{display:flex;gap:5px}.dots i{width:10px;height:10px;border-radius:50%;background:var(--line);display:block}
+.adm{display:grid;grid-template-columns:190px minmax(0,1fr);min-height:560px}
+.amenu{background:var(--brand);color:var(--brand-ink);padding:14px 10px;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.amenu .co{font-family:var(--f-display);font-stretch:110%;font-weight:800;padding:4px 8px 12px;line-height:1.2}
+.amenu .co small{display:block;font-family:var(--f-body);font-weight:400;font-size:12px;opacity:.75;font-stretch:100%}
+.amenu span{padding:7px 8px;border-radius:6px;opacity:.85}
+.amenu span.on{background:color-mix(in srgb,var(--brand-ink) 14%,transparent);opacity:1;font-weight:700;box-shadow:inset 3px 0 0 var(--accent)}
+.amain{padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.ahead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.ahead h4{margin:0;font-family:var(--f-display);font-stretch:115%;font-weight:800;font-size:22px}
+.btn{border:1.5px solid var(--line);background:var(--surface);padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px}
+.btn.y{background:var(--accent);border-color:var(--accent-ink);color:var(--accent-ink)}
+.cols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px}
+
+/* Piezas */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.big{font-family:var(--f-display);font-stretch:115%;font-weight:800;font-size:30px;line-height:1}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--sunk);color:var(--ink);white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.warn{background:var(--warn-bg);color:var(--warn)}.pill.late{background:var(--late-bg);color:var(--late)}.pill.y{background:var(--accent);color:var(--accent-ink)}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:13px;font-weight:700}
+.field .in{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 12px;min-height:44px}
+.field .opt{font-weight:400;color:var(--muted)}
+.photo{border:1.5px dashed var(--muted);border-radius:10px;min-height:86px;display:grid;place-items:center;text-align:center;font-size:13px;color:var(--muted);padding:10px;background:repeating-linear-gradient(135deg,transparent 0 9px,color-mix(in srgb,var(--muted) 10%,transparent) 9px 10px)}
+.photo.done{border-style:solid;border-color:var(--ok);color:var(--ok);font-weight:700}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;background:var(--sunk);padding:4px;border-radius:10px}
+.seg button{border:0;background:transparent;border-radius:7px;padding:8px 4px;font-weight:700;font-size:13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 0 var(--line)}
+.stop{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.stop .num{width:30px;height:30px;border-radius:8px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--f-mono);font-weight:600}
+.stop.done .num{background:var(--ok)}
+.stop .who{font-weight:700}
+.stop .where{font-size:12.5px;color:var(--muted)}
+.stop .side{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.msgs{display:flex;flex-direction:column;gap:8px}
+.m{max-width:82%;padding:8px 11px;border-radius:14px;font-size:14px;background:var(--surface);border:1px solid var(--line)}
+.m.me{align-self:flex-end;background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.m small{display:block;font-family:var(--f-mono);font-size:10.5px;opacity:.7;margin-top:2px}
+.m.ai{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
+.composer{display:flex;gap:6px}.composer .in{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:9px 14px;background:var(--surface);color:var(--muted);font-size:14px}
+.iconrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.iconrow div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;font-size:12px;font-weight:700}
+.iconrow svg{display:block;margin:0 auto 3px}
+.banner{border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.banner.late{background:var(--late-bg);color:var(--late)}.banner.warn{background:var(--warn-bg);color:var(--warn)}.banner.ok{background:var(--ok-bg);color:var(--ok)}
+.banner p{margin:2px 0 0;color:var(--ink);font-size:13.5px}
+.mapbox{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--map)}
+.mapbox svg{display:block;width:100%;height:auto}
+.otp{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.otp div{border:1.5px solid var(--line);border-radius:10px;height:50px;display:grid;place-items:center;font-family:var(--f-mono);font-size:22px;font-weight:600;background:var(--surface)}
+.otp div.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.code{font-family:var(--f-mono);font-size:24px;font-weight:600;letter-spacing:.12em;text-align:center;border:2px dashed var(--brand);border-radius:12px;padding:14px;background:var(--surface)}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th{text-align:left;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--line)}
+table.t td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.tw{overflow-x:auto}
+.call{flex:1;background:var(--brand);color:var(--brand-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px}
+.avatar{width:96px;height:96px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:34px}
+.lock{flex:1;background:linear-gradient(170deg,var(--brand),#071722);color:#f1f6fa;padding:30px 16px;display:flex;flex-direction:column;gap:12px}
+.lock .time{font-family:var(--f-display);font-stretch:85%;font-weight:600;font-size:64px;text-align:center;line-height:1}
+.notif{background:rgba(255,255,255,.14);border-radius:16px;padding:12px 14px;font-size:14px}
+.notif b{display:block}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:700}
+.list{display:flex;flex-direction:column;gap:8px}
+.post{border-left:3px solid var(--accent);padding:4px 0 4px 10px}
+.post .meta{font-size:12px;color:var(--muted)}
+.action-card{border:1.5px solid var(--accent);border-radius:12px;padding:12px;background:var(--surface);display:flex;flex-direction:column;gap:8px}
+.log{font-family:var(--f-mono);font-size:12px;display:flex;flex-direction:column;gap:6px}
+.log div{padding:6px 8px;background:var(--sunk);border-radius:6px}
+
+/* Modo app: solo la pantalla, a todo el ancho y alto */
+.ab .back{cursor:pointer;color:var(--ink);font-size:18px;line-height:1;padding:0}
+body.app .top,body.app .side,body.app .note,body.app .hazard{display:none}
+body.app .wrap{display:block;max-width:none;padding:0}
+body.app .stage{display:block}
+body.app .phone{width:100%;height:100vh;height:100dvh;max-height:none;min-height:0;border-radius:0;padding:0;box-shadow:none;background:var(--bg)}
+body.app .ph-in{border-radius:0}
+body.app .browser{border-radius:0;border:0;box-shadow:none}
+body.app .bbar{display:none}
+body.app .adm{min-height:100vh;min-height:100dvh}
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .steps{flex-direction:row;overflow-x:auto;padding-bottom:6px}
+  .steps li{flex:0 0 auto}
+  .steps button{grid-template-columns:auto;width:auto;white-space:nowrap}
+  .steps .h{display:none}
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .phone{margin:0 auto}
+  .cols{grid-template-columns:minmax(0,1fr)}
+  .adm{grid-template-columns:minmax(0,1fr)}
+  .amenu{flex-direction:row;overflow-x:auto;white-space:nowrap}
+  .amenu .co{padding-bottom:4px}
+}
+@media (max-width:440px){
+  .phone{width:100%;border-radius:24px;padding:6px;height:680px}
+  .ph-in{border-radius:19px}
+}
+@media (prefers-reduced-motion:reduce){.moving{display:none}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="logo"><span class="logo-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" stroke="#1b1500" stroke-width="2.2" stroke-linejoin="round" fill="none"/><circle cx="7" cy="17.5" r="1.8" fill="#1b1500"/><circle cx="17.5" cy="17.5" r="1.8" fill="#1b1500"/></svg></span>
+      <span>Reparto<br><small>Prototipo desechable · datos ficticios</small></span></div>
+    <nav class="roles" aria-label="Perfil">
+      <button data-role="conductor" aria-pressed="true">Conductor</button>
+      <button data-role="receptor" aria-pressed="false">Receptor</button>
+      <button data-role="admin" aria-pressed="false">Administrador</button>
+    </nav>
+  </div>
+  <div class="hazard" aria-hidden="true"></div>
+</header>
+
+<main class="wrap">
+  <aside class="side">
+    <h2 id="sideTitle">Pantallas del conductor</h2>
+    <ol class="steps" id="steps"></ol>
+    <p class="legend">Caso de referencia: un martes de Matías Rojas, 4 entregas en los sectores Oriente y Sur de Santiago. El botón amarillo de cada pantalla avanza a la siguiente.</p>
+  </aside>
+  <section class="stage" id="stage" aria-live="polite"></section>
+</main>
+
+<script>window.REPARTO_MODO={rol:"conductor"};</script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- Datos del caso ---------- */
+var E = [
+  {n:1, who:"Javiera Muñoz", where:"Los Leones 1180, Providencia", sec:"Oriente", h:"09:15", pay:"Ya pagada"},
+  {n:2, who:"Pedro Álvarez", where:"Irarrázaval 3410, Ñuñoa", sec:"Oriente", h:"09:50", pay:"Cobrar $45.990"},
+  {n:3, who:"Sofía Contreras", where:"Walker Martínez 2050, La Florida", sec:"Sur", h:"10:40", pay:"Ya pagada"},
+  {n:4, who:"Luis Bravo", where:"Pje. Los Aromos 455, Puente Alto", sec:"Sur", h:"11:45", pay:"Cobrar $22.500"}
+];
+
+/* ---------- Ayudas de dibujo ---------- */
+function ico(name){
+  var p = {
+    phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+    nav:'<path d="M3 11l18-8-8 18-2-8z"/>',
+    cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+    flag:'<path d="M5 21V4h11l-2 4 2 4H5"/>',
+    pin:'<path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>'
+  }[name];
+  return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+p+'</svg>';
+}
+function pill(t,k){return '<span class="pill '+(k||"")+'">'+t+'</span>';}
+function field(l,v,opt){return '<div class="field"><label>'+l+(opt?' <span class="opt">(opcional)</span>':'')+'</label><div class="in">'+v+'</div></div>';}
+function photo(t,done){return '<div class="photo'+(done?' done':'')+'">'+(done?'✓ ':'')+t+'</div>';}
+function seg(group,opts,on){return '<div class="seg" role="group">'+opts.map(function(o,i){return '<button data-seg="'+group+'" aria-pressed="'+(i===on)+'">'+o+'</button>';}).join("")+'</div>';}
+function msg(t,me,meta,ai){return '<div class="m'+(me?' me':'')+(ai?' ai':'')+'">'+t+(meta?'<small>'+meta+'</small>':'')+'</div>';}
+
+/* Mapa ficticio de Santiago: manzanas, río Mapocho, ruta y vehículo */
+function map(o){
+  o=o||{};
+  var s='<div class="mapbox"><svg viewBox="0 0 360 '+(o.h||230)+'" role="img" aria-label="Mapa de ejemplo">';
+  s+='<rect width="360" height="'+(o.h||230)+'" fill="var(--map)"/>';
+  for(var x=0;x<360;x+=45){for(var y=0;y<(o.h||230);y+=38){s+='<rect x="'+(x+6)+'" y="'+(y+6)+'" width="33" height="26" rx="3" fill="var(--map-block)"/>';}}
+  s+='<path d="M-10 40 C 80 20, 140 70, 220 45 S 330 20, 380 35" stroke="var(--map-river)" stroke-width="10" fill="none"/>';
+  if(o.sectors){
+    s+='<path d="M10 60 H200 V140 H10Z" fill="var(--accent)" fill-opacity=".10" stroke="var(--accent)" stroke-dasharray="5 4" stroke-width="1.5"/>';
+    s+='<path d="M160 150 H350 V'+((o.h||230)-8)+' H160Z" fill="var(--brand)" fill-opacity=".10" stroke="var(--brand)" stroke-dasharray="5 4" stroke-width="1.5"/>';
+    s+='<text x="16" y="76" font-size="11" font-family="IBM Plex Mono, monospace" fill="var(--ink)">SECTOR ORIENTE</text>';
+    s+='<text x="166" y="166" font-size="11" font-family="IBM Plex Mono, monospace" fill="var(--ink)">SECTOR SUR</text>';
+  }
+  var route=o.route||"M40 190 L40 120 L130 120 L130 80 L260 80";
+  s+='<path id="r'+(o.id||0)+'" d="'+route+'" stroke="var(--brand)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+  var dest=o.dest||[260,80];
+  s+='<g transform="translate('+dest[0]+','+dest[1]+')"><path d="M0 0 C-9 -12 -9 -24 0 -26 C9 -24 9 -12 0 0Z" fill="var(--late)"/><circle cy="-17" r="3.5" fill="#fff"/></g>';
+  if(o.others){o.others.forEach(function(d){s+='<circle cx="'+d[0]+'" cy="'+d[1]+'" r="7" fill="'+d[2]+'" stroke="#fff" stroke-width="2"/>';});}
+  var col=o.late?"var(--late)":"var(--accent)";
+  s+='<circle r="9" fill="'+col+'" stroke="var(--ink)" stroke-width="2.5"><animateMotion class="moving" dur="'+(o.dur||14)+'s" repeatCount="indefinite" rotate="0"><mpath href="#r'+(o.id||0)+'"/></animateMotion></circle>';
+  s+='</svg></div>';
+  return s;
+}
+
+/* Pantalla de teléfono */
+function phone(o){
+  var head = o.raw ? '' : '<div class="ab">'+(o.back?'<button class="back" data-prev aria-label="Atrás">‹</button>':'')+'<div><h4>'+o.title+'</h4>'+(o.sub?'<div class="sub">'+o.sub+'</div>':'')+'</div></div>';
+  var body = o.raw ? o.raw : '<div class="bd">'+o.body+'</div>';
+  var act = o.cta ? '<div class="act"><button class="cta '+(o.ctaKind||"")+'" data-next>'+o.cta+'</button>'+(o.alt?'<button class="ghost" data-alt>'+o.alt+'</button>':'')+'</div>' : '';
+  return '<div class="phone"><div class="ph-in"><div class="sb"><span>'+(o.time||"9:41")+'</span><span>'+(o.net||"4G ▮▮▮ 82%")+'</span></div>'+head+body+act+'</div></div>';
+}
+
+/* Pantalla de navegador para el administrador */
+var MENU=["Mapa en vivo","Entregas","Asistente","Mensajes","Programados","Equipo"];
+function browser(active,body){
+  return '<div class="browser"><div class="bbar"><span class="dots"><i></i><i></i><i></i></span><span>Panel del administrador · Reparto</span></div>'+
+    '<div class="adm"><nav class="amenu"><div class="co">Despachos Cordillera<small>Carolina Fuentes · Admin</small></div>'+
+    MENU.map(function(m){return '<span class="'+(m===active?'on':'')+'">'+m+'</span>';}).join("")+
+    '</nav><div class="amain">'+body+'</div></div></div>';
+}
+
+/* ---------- Pantallas ---------- */
+var S = {
+conductor:[
+ {t:"Crear cuenta", h:"Lunes · registro", note:"Registro del conductor", txt:"Matías se registra una sola vez. Los mismos datos le sirven para todas las empresas que lo contraten.", sys:"El número de teléfono queda guardado y nunca se muestra a receptores. La licencia la revisa el administrador antes de asignar entregas.",
+  render:function(){return phone({title:"Crea tu cuenta de conductor",sub:"Paso 1 de 3",body:
+   field("Nombre completo","Matías Rojas Pérez")+field("Correo","matias.rojas@correo.cl")+field("Teléfono",'<span class="mono">+56 9 8765 4321</span>')+
+   '<div class="field"><label>Foto de tu licencia de conducir</label>'+photo("Licencia clase B · subida",true)+'</div>'+
+   '<div class="field"><label>Documentos del camión <span class="opt">(opcional)</span></label>'+photo("Toca para fotografiar permiso de circulación o revisión técnica")+'</div>',
+   cta:"Enviarme código por correo"});}},
+ {t:"Verificar teléfono", h:"Lunes · registro", note:"Sin contraseña", txt:"Entra con un código de 6 dígitos que llega a su correo. No hay contraseña que olvidar.", sys:"El código vence en 5 minutos y sirve una sola vez.",
+  render:function(){return phone({title:"Escribe el código",sub:"Lo enviamos a m•••@correo.cl",back:1,body:
+   '<div class="otp"><div>4</div><div>8</div><div>2</div><div>0</div><div class="on">1</div><div></div></div><p style="color:var(--muted);font-size:13px;margin:0">¿No llegó? Reenviar en <span class="mono">0:42</span></p>',
+   cta:"Verificar"});}},
+ {t:"Permiso de ubicación", h:"Primera vez", note:"Consentimiento explícito", txt:"Antes de pedir el permiso del sistema, la app explica para qué y cuándo usa la ubicación. Es el consentimiento que exige la ley chilena.", sys:"Si Matías rechaza, puede usar la app igual, pero el administrador verá «sin ubicación» y no habrá avisos automáticos de llegada.",
+  render:function(){return phone({title:"Tu ubicación, solo en ruta",body:
+   '<div class="banner ok">'+ico("pin")+'<div><b>Solo entre «Iniciar ruta» y «Terminar ruta»</b><p>Fuera de tu jornada no se envía nada. Siempre verás un aviso mientras se comparte.</p></div></div>'+
+   '<div class="card"><div class="lbl">Para qué se usa</div><ul style="margin:6px 0 0;padding-left:18px"><li>Que tu empresa vea dónde vas</li><li>Avisar solo al cliente cuando vas llegando</li><li>Detectar si vas atrasado y ofrecerte avisar</li></ul></div>'+
+   '<div class="card"><div class="lbl">Por cuánto tiempo</div><p style="margin:6px 0 0">El recorrido se guarda 30 días y luego se borra. Puedes pedir el borrado de tu cuenta cuando quieras.</p></div>',
+   cta:"Entendido, permitir ubicación",alt:"Ahora no"});}},
+ {t:"Elegir empresa", h:"08:30", note:"Varias empresas", txt:"Matías trabaja para dos empresas. Elige con cuál parte la jornada. Cada empresa solo ve lo que él hace para ella.", sys:"La ubicación se comparte solo con la empresa de la ruta iniciada.",
+  render:function(){return phone({title:"¿Con quién trabajas hoy?",time:"8:30",body:
+   '<div class="stop"><span class="num">DC</span><div><div class="who">Despachos Cordillera</div><div class="where">4 entregas hoy · Oriente y Sur</div></div>'+pill("Hoy","y")+'</div>'+
+   '<div class="stop"><span class="num" style="background:var(--muted)">FR</span><div><div class="who">Ferretería El Roble</div><div class="where">Sin entregas hoy</div></div><span></span></div>',
+   cta:"Continuar con Despachos Cordillera"});}},
+ {t:"Ruta del día", h:"08:31", note:"Orden propuesto", txt:"Las 4 entregas aparecen en el orden recomendado: primero Oriente, después Sur. Cada una tiene su propio inicio y fin.", sys:"Arriba aparece el aviso publicado a las 08:20 en el tablero.",
+  render:function(){return phone({title:"Martes 14 · 4 entregas",sub:"Despachos Cordillera · KXTR-41",time:"8:31",body:
+   '<div class="banner warn">'+ico("flag")+'<div><b>Aviso del tablero · 08:20</b><p>Corte de calle en Irarrázaval entre 08:00 y 10:00.</p></div></div>'+
+   E.map(function(e){return '<div class="stop"><span class="num">'+e.n+'</span><div style="min-width:0"><div class="who">'+e.who+'</div><div class="where">'+e.where+'</div></div><div class="side"><span class="mono" style="font-weight:600">'+e.h+'</span>'+pill(e.pay,e.pay.indexOf("Cobrar")===0?"warn":"ok")+'</div></div>';}).join(""),
+   cta:"Iniciar ruta"});}},
+ {t:"En ruta", h:"08:58", note:"Hacia la entrega 1", txt:"Mapa con el recorrido, hora estimada y accesos para abrir Waze o Google Maps, llamar o escribir. Javiera ya recibió «va en camino».", sys:"Se envía la ubicación cada 15 segundos y la hora estimada se recalcula cada minuto.",
+  render:function(){return phone({title:"Entrega 1 · Javiera Muñoz",sub:"Los Leones 1180, Providencia",time:"8:58",net:"● Ubicación activa",body:
+   map({id:1})+
+   '<div class="row card"><div><div class="lbl">Llegada estimada</div><div class="big mono">09:12</div></div><div style="text-align:right"><div class="lbl">Comprometida</div><div class="mono" style="font-weight:600">09:15</div>'+pill("A tiempo","ok")+'</div></div>'+
+   '<div class="iconrow"><div>'+ico("nav")+'Waze</div><div>'+ico("nav")+'Maps</div><div>'+ico("phone")+'Llamar</div><div>'+ico("chat")+'Escribir</div></div>',
+   cta:"Llegué"});}},
+ {t:"Entregar (pagada)", h:"09:12", note:"Comprobante", txt:"Entrega ya pagada: solo se toma la foto y se confirma. El aviso «llegó» sale solo.", sys:"La entrega 1 se cierra y empieza a contar la entrega 2: Pedro recibe «va en camino».",
+  render:function(){return phone({title:"Confirmar entrega 1",sub:"Ya pagada · sin cobro",time:"9:12",back:1,body:
+   '<div class="banner ok">'+ico("flag")+'<div><b>Pagada antes del despacho</b><p>Comprobante adjunto por la empresa.</p></div></div>'+
+   '<div class="field"><label>Foto del paquete entregado</label>'+photo("Foto tomada · 09:12",true)+'</div>'+
+   '<div class="field"><label>Mensaje <span class="opt">(opcional)</span></label><div class="in">Recibido por Javiera en la puerta.</div></div>',
+   cta:"Confirmar entrega"});}},
+ {t:"Chat con receptor", h:"09:20", note:"Pedro escribe", txt:"Pedro pregunta si puede dejarlo en conserjería. El mensaje también llega a la bandeja del administrador.", sys:"El asistente propone una respuesta en el panel, pero no envía nada.",
+  render:function(){return phone({title:"Pedro Álvarez",sub:"Entrega 2 · Irarrázaval 3410",time:"9:20",back:1,body:
+   '<div class="msgs">'+msg("Hola, ¿puede dejarlo en conserjería? Estoy en una reunión.",0,"09:20")+msg("Sí, sin problema. Llego en 20 min.",1,"09:22")+msg("Gracias. Ya subí la transferencia en la app.",0,"09:40")+'</div>'+
+   '<div style="flex:1"></div><div class="composer"><div class="in">Escribe un mensaje…</div></div>',
+   cta:"Volver a la entrega"});}},
+ {t:"Cobro y entrega", h:"09:48", note:"Entrega con cobro", txt:"El administrador marcó «cobrar» y Matías no puede cambiarlo. Pedro ya subió el comprobante y Matías lo ve antes de entregar.", sys:"Pago: informado por receptor → confirmado por conductor.",
+  render:function(){return phone({title:"Cobrar y entregar",sub:"Entrega 2 · Pedro Álvarez",time:"9:48",back:1,body:
+   '<div class="card row"><div><div class="lbl">Monto a cobrar</div><div class="big mono">$45.990</div></div>'+pill("Transferencia","y")+'</div>'+
+   '<div class="banner ok">'+ico("flag")+'<div><b>Pedro informó su pago · 09:40</b><p>Transferencia Banco Estado. Foto del comprobante adjunta.</p></div></div>'+
+   photo("Comprobante de Pedro (ver)",true)+
+   '<div class="field"><label>Foto del paquete entregado</label>'+photo("Foto en conserjería · 09:48",true)+'</div>',
+   cta:"Confirmar pago y entrega"});}},
+ {t:"Alerta de retraso", h:"10:22", note:"Retraso sostenido", txt:"La hora estimada a Sofía lleva 5 minutos con más de 15 minutos de atraso. Recién ahí se alerta: un semáforo no la dispara.", sys:"El administrador ve a Matías en rojo en el mapa.",
+  render:function(){return phone({title:"Entrega 3 · Sofía Contreras",sub:"Walker Martínez 2050, La Florida",time:"10:22",net:"● Ubicación activa",body:
+   map({id:3,late:1,route:"M30 30 L30 110 L150 110 L150 190 L300 190",dest:[300,190],dur:30})+
+   '<div class="banner late">'+ico("flag")+'<div><b>Vas 28 min atrasado</b><p>Llegada estimada <span class="mono">11:08</span> · comprometida <span class="mono">10:40</span>. ¿Le avisas a la empresa?</p></div></div>',
+   cta:"Reportar al administrador",ctaKind:"danger",alt:"Ignorar por ahora"});}},
+ {t:"Reporte", h:"10:23", note:"Foto y mensaje con destinatario", txt:"El reporte viene listo desde la alerta. Matías elige a quién va: administrador, receptor o ambos.", sys:"Va solo al administrador. Carolina decide qué le dice a Sofía.",
+  render:function(){return phone({title:"Enviar reporte",sub:"Entrega 3",time:"10:23",back:1,body:
+   '<div class="field"><label>¿Para quién?</label>'+seg("dest",["Administrador","Receptor","Ambos"],0)+'</div>'+
+   '<div class="field"><label>Foto</label>'+photo("Foto del taco · 10:23",true)+'</div>'+
+   '<div class="field"><label>Mensaje</label><div class="in">Choque en Vicuña Mackenna, voy detenido. Calculo 30 min más.</div></div>',
+   cta:"Enviar reporte"});}},
+ {t:"Llamada entrante", h:"11:00", note:"Llamada por internet", txt:"Sofía llama desde la web con código. Ninguno ve el número del otro.", sys:"La llamada usa datos móviles. Si no hay datos, la app ofrece escribir un mensaje.",
+  render:function(){return phone({time:"11:00",raw:'<div class="call"><div class="lbl" style="color:inherit;opacity:.8">Llamada de Reparto</div><div class="avatar">SC</div><div style="font-family:var(--f-display);font-weight:800;font-size:24px">Sofía Contreras</div><div style="opacity:.8">Receptora · Entrega 3<br>Número oculto</div></div>',
+   cta:"Contestar",alt:"Rechazar y escribir"});}},
+ {t:"Entrega sin señal", h:"11:58", note:"Sin señal", txt:"En el condominio no hay señal. Matías cobra en efectivo, toma las fotos y guarda. Nada se pierde.", sys:"Se guarda en el teléfono con un identificador único. Se envía una sola vez cuando vuelva la señal (12:14).",
+  render:function(){return phone({title:"Cobrar y entregar",sub:"Entrega 4 · Luis Bravo",time:"11:58",net:"Sin señal",back:1,body:
+   '<div class="banner warn">'+ico("flag")+'<div><b>Estás sin señal</b><p>Puedes completar la entrega. Se enviará sola cuando vuelva la conexión.</p></div></div>'+
+   '<div class="card row"><div><div class="lbl">Monto a cobrar</div><div class="big mono">$22.500</div></div>'+pill("Efectivo","y")+'</div>'+
+   '<div class="field"><label>Foto del efectivo recibido</label>'+photo("Foto · 11:58",true)+'</div>'+
+   '<div class="field"><label>Foto del paquete entregado</label>'+photo("Foto · 11:58",true)+'</div>',
+   cta:"Guardar sin señal"});}},
+ {t:"Chat y tablero", h:"12:16", note:"Dos secciones separadas", txt:"El chat directo con el administrador y el tablero de avisos para todos los conductores viven en pestañas separadas.", sys:"El tablero es de lectura para conductores. Publica el administrador o el asistente cuando él lo pide.",
+  render:function(){return phone({title:"Comunicación",time:"12:16",body:
+   seg("tab",["Chat con Carolina","Tablero"],0)+
+   '<div class="msgs">'+msg("Recibí tu reporte del choque. Ya le avisé a Sofía.",0,"Carolina · 10:26")+msg("Gracias. Entregué la 4 sin señal, ya se sincronizó.",1,"12:16")+'</div>'+
+   '<div class="lbl" style="margin-top:6px">Tablero de avisos</div><div class="list"><div class="post"><b>Corte de calle en Irarrázaval</b><div class="meta">Programado · 08:20 · para todos</div></div><div class="post"><b>Recuerden fotografiar el efectivo</b><div class="meta">Rodrigo Paz · ayer</div></div></div>',
+   cta:"Ir al resumen de la ruta"});}},
+ {t:"Terminar ruta", h:"12:25", note:"Fin de jornada", txt:"Al terminar, la ubicación deja de enviarse y Matías ve su resumen.", sys:"Ubicación apagada. El recorrido queda 30 días para consulta del administrador y luego se borra.",
+  render:function(){return phone({title:"Resumen del día",sub:"Despachos Cordillera",time:"12:25",body:
+   E.map(function(e){return '<div class="stop done"><span class="num">✓</span><div><div class="who">'+e.who+'</div><div class="where">'+(["Entregada 09:12","Entregada 09:48 · transferencia","Entregada 11:08 · 28 min tarde","Entregada 11:58 · sin señal · efectivo"][e.n-1])+'</div></div><span></span></div>';}).join("")+
+   '<div class="card row"><div><div class="lbl">Cobrado</div><div class="big mono">$68.490</div></div><div class="where" style="text-align:right;font-size:13px;color:var(--muted)">1 transferencia<br>1 efectivo</div></div>',
+   cta:"Terminar ruta y apagar ubicación",ctaKind:"dark"});}}
+],
+
+receptor:[
+ {t:"Entrar con código", h:"Lunes 19:45", note:"Web sin instalar", txt:"Sofía recibió el código por privado. Entra desde el navegador, sin crear cuenta, y su paquete aparece solo.", sys:"El código sirve solo para las entregas de Sofía y vence cuando se cierran. Tras 5 intentos fallidos, se bloquea por 15 minutos.",
+  render:function(){return phone({title:"Sigue tu paquete",sub:"Despachos Cordillera te envió un código",time:"19:45",body:
+   '<div class="code">RPT-4K7Q-92</div>'+field("Tu nombre","Sofía Contreras")+
+   '<p style="font-size:13px;color:var(--muted);margin:0">Al continuar aceptas los <u>términos</u> y la <u>política de privacidad</u>.</p>',
+   cta:"Ver mi paquete",alt:"Prefiero instalar la app"});}},
+ {t:"Cuenta en la app", h:"Opcional", note:"Registro corto", txt:"Si instala la app, solo pide nombre, teléfono y correo. Las entregas ligadas a ese teléfono aparecen sin buscarlas.", sys:"Si antes entró con código, la cuenta se une a ese mismo historial al verificar el teléfono.",
+  render:function(){return phone({title:"Crea tu cuenta",sub:"Solo tres datos",body:
+   field("Nombre completo","Javiera Muñoz Soto")+field("Teléfono",'<span class="mono">+56 9 1234 5678</span>')+field("Correo","javiera.munoz@correo.cl")+
+   '<div class="card"><div class="lbl">Te avisaremos</div><p style="margin:6px 0 0">Cuando tu paquete salga, cuando esté cerca y cuando llegue.</p></div>',
+   cta:"Enviarme código por correo"});}},
+ {t:"Seguimiento", h:"10:30", note:"Solo su paquete", txt:"Sofía ve al conductor en el mapa y la hora estimada actualizada con el retraso. No ve otras entregas ni la ruta completa.", sys:"Solo se muestra la posición mientras el conductor va hacia ella.",
+  render:function(){return phone({title:"Tu paquete va en camino",sub:"Despachos Cordillera · Conductor: Matías R.",time:"10:30",body:
+   map({id:5,late:1,route:"M30 30 L30 110 L150 110 L150 190 L300 190",dest:[300,190],dur:30})+
+   '<div class="card row"><div><div class="lbl">Llega aprox.</div><div class="big mono">11:08</div></div>'+pill("Atrasado 28 min","late")+'</div>'+
+   '<div class="banner warn">'+ico("chat")+'<div><b>Mensaje de Despachos Cordillera · 10:26</b><p>Tu entrega se atrasa unos 30 minutos por un accidente en Vicuña Mackenna.</p></div></div>'+
+   '<div class="iconrow" style="grid-template-columns:repeat(3,1fr)"><div>'+ico("chat")+'Escribir</div><div>'+ico("cam")+'Pago</div><div>'+ico("flag")+'Recibí</div></div>',
+   cta:"Llamar al conductor"});}},
+ {t:"Llamada", h:"11:00", note:"Sin exponer números", txt:"La llamada pasa por internet. Ni Sofía ni Matías ven el número del otro.", sys:"Si el navegador no permite micrófono, se ofrece escribir.",
+  render:function(){return phone({time:"11:00",raw:'<div class="call"><div class="lbl" style="color:inherit;opacity:.8">En llamada · 00:42</div><div class="avatar">MR</div><div style="font-family:var(--f-display);font-weight:800;font-size:24px">Matías R.</div><div style="opacity:.8">Tu conductor · Número oculto</div></div>',
+   cta:"Colgar",ctaKind:"danger"});}},
+ {t:"Notificación", h:"10:58", note:"Aviso «cerca»", txt:"Así llega el aviso automático al teléfono de quien tiene la app.", sys:"En la web con código el aviso aparece al abrir la página. Las notificaciones web en iPhone requieren agregarla a la pantalla de inicio.",
+  render:function(){return phone({time:"",net:"",raw:'<div class="lock"><div class="time">10:58</div><div style="text-align:center;opacity:.8">martes 14</div>'+
+   '<div class="notif"><b>Reparto · ahora</b>Tu paquete está cerca. Matías llega en unos 10 minutos.</div><div class="notif"><b>Reparto · 10:26</b>Despachos Cordillera: tu entrega se atrasa unos 30 minutos.</div></div>',
+   cta:"Abrir"});}},
+ {t:"Pago", h:"09:40", note:"Pedro informa su pago", txt:"El pago se hace fuera de la app. Aquí se informa con foto de la transferencia o del efectivo entregado, y un mensaje.", sys:"Pagar por transferencia dentro de la app se evalúa en la Etapa C (costo y regulación).",
+  render:function(){return phone({title:"Pagar tu pedido",sub:"Entrega de Pedro Álvarez",time:"9:40",back:1,body:
+   '<div class="card row"><div><div class="lbl">Total</div><div class="big mono">$45.990</div></div>'+pill("Pendiente","warn")+'</div>'+
+   seg("pay",["Transferencia","Efectivo"],0)+
+   '<div class="card"><div class="lbl">Datos para transferir</div><dl class="kv" style="margin:6px 0 0"><dt>Titular</dt><dd>Despachos Cordillera SpA</dd><dt>Banco</dt><dd>Banco de ejemplo</dd><dt>Cuenta</dt><dd class="mono">00-000-00000-0</dd></dl><button class="btn" style="margin-top:8px">Copiar datos</button></div>'+
+   '<div class="field"><label>Foto del comprobante</label>'+photo("comprobante_transferencia.jpg",true)+'</div>'+
+   '<div class="field"><label>Mensaje <span class="opt">(opcional)</span></label><div class="in">Transferido desde cuenta de mi pareja.</div></div>',
+   cta:"Informar pago"});}},
+ {t:"Mensajes", h:"09:20", note:"Dos conversaciones", txt:"El receptor puede escribir al conductor o a la empresa, cada uno por separado.", sys:"Los mensajes a la empresa los lee el administrador. El asistente puede sugerirle una respuesta.",
+  render:function(){return phone({title:"Mensajes",time:"9:20",back:1,body:
+   seg("chat",["Conductor","Empresa"],0)+
+   '<div class="msgs">'+msg("Hola, ¿puede dejarlo en conserjería? Estoy en una reunión.",1,"09:20")+msg("Sí, sin problema. Llego en 20 min.",0,"Matías · 09:22")+'</div>'+
+   '<div style="flex:1"></div><div class="composer"><div class="in">Escribe un mensaje…</div></div>',
+   cta:"Volver al seguimiento"});}},
+ {t:"Comprobante de recepción", h:"11:08", note:"Sofía confirma", txt:"Al recibir, Sofía sube fotos y un mensaje. Le llega al administrador.", sys:"Queda junto a la foto de entrega del conductor, como respaldo ante reclamos.",
+  render:function(){return phone({title:"Recibí mi paquete",sub:"Entrega 3",time:"11:08",back:1,body:
+   '<div class="banner ok">'+ico("flag")+'<div><b>Entregado 11:08</b><p>Matías marcó la entrega.</p></div></div>'+
+   '<div class="field"><label>Fotos</label>'+photo("2 fotos agregadas",true)+'</div>'+
+   '<div class="field"><label>Mensaje</label><div class="in">Llegó todo bien, gracias.</div></div>',
+   cta:"Enviar a la empresa"});}}
+],
+
+admin:[
+ {t:"Registro de empresa", h:"Una vez", note:"Varios administradores", txt:"Carolina registra la empresa y agrega a Rodrigo como segundo administrador.", sys:"Cada administrador tiene su propia cuenta. Todo lo que hace queda registrado con su nombre.",
+  render:function(){return browser("Equipo",'<div class="ahead"><h4>Tu empresa</h4></div><div class="cols"><div class="card" style="display:flex;flex-direction:column;gap:10px">'+
+   field("Nombre de la empresa","Despachos Cordillera SpA")+field("Nombre del administrador","Carolina Fuentes")+field("Teléfono de contacto",'<span class="mono">+56 2 2345 6789</span>')+'<div class="field"><label>Foto <span class="opt">(opcional)</span></label>'+photo("Logo o foto")+'</div><button class="btn y" data-next>Guardar</button></div>'+
+   '<div class="card"><div class="lbl">Administradores</div><div class="list" style="margin-top:8px"><div class="row"><b>Carolina Fuentes</b>'+pill("Tú","y")+'</div><div class="row"><b>Rodrigo Paz</b>'+pill("Invitado","ok")+'</div></div><button class="btn" style="margin-top:12px">+ Invitar administrador</button>'+
+   '<div class="lbl" style="margin-top:16px">Conductores</div><div class="list" style="margin-top:8px"><div class="row"><span><b>Matías Rojas</b><br><small style="color:var(--muted)">Licencia ✓ · Camión: no subido</small></span>'+pill("Activo","ok")+'</div></div></div></div>');}},
+ {t:"Crear entrega", h:"Lunes 19:30", note:"Crear y asignar", txt:"Carolina crea la entrega, la asigna y decide si se cobra. El conductor no puede cambiar esto.", sys:"Si el teléfono del receptor ya tiene cuenta, la entrega aparece sola en su app. Si no, se genera un código.",
+  render:function(){return browser("Entregas",'<div class="ahead"><h4>Nueva entrega</h4>'+seg("modo",["Una por una","Subir archivo"],0)+'</div><div class="cols"><div class="card" style="display:flex;flex-direction:column;gap:10px">'+
+   field("Receptor","Luis Bravo · +56 9 •••• 1190")+field("Dirección","Pje. Los Aromos 455, Puente Alto")+
+   '<div class="cols" style="grid-template-columns:1fr 1fr">'+field("Sector","Sur")+field("Hora comprometida",'<span class="mono">11:45</span>')+'</div>'+
+   field("Conductor","Matías Rojas")+'<div class="field"><label>Pago</label>'+seg("cobro",["Ya pagada","Cobrar en la entrega"],1)+'</div>'+
+   '<div class="cols" style="grid-template-columns:1fr 1fr">'+field("Monto",'<span class="mono">$22.500</span>')+field("Forma aceptada","Efectivo")+'</div><button class="btn y" data-next>Crear entrega</button></div>'+
+   '<div class="card"><div class="lbl">Entregas de mañana</div><div class="tw"><table class="t"><thead><tr><th>#</th><th>Receptor</th><th>Sector</th><th>Hora</th></tr></thead><tbody>'+
+   E.map(function(e){return '<tr><td class="mono">'+e.n+'</td><td>'+e.who+'</td><td>'+e.sec+'</td><td class="mono">'+e.h+'</td></tr>';}).join("")+'</tbody></table></div></div></div>');}},
+ {t:"Subir archivo", h:"Lunes 19:20", note:"Muchas entregas de una vez", txt:"En vez de crear las entregas una por una, Carolina sube su planilla Excel o CSV del día. El sistema reconoce las columnas y muestra una vista previa antes de crear nada.", sys:"Revisa cada fila: ubica la dirección en el mapa, valida el teléfono y detecta duplicados. Las filas con problemas no se crean hasta corregirlas. Si una fila no trae conductor, se asigna según el sector.",
+  render:function(){return browser("Entregas",'<div class="ahead"><h4>Subir entregas desde archivo</h4>'+seg("modo2",["Una por una","Subir archivo"],1)+'</div><div class="cols"><div class="card" style="display:flex;flex-direction:column;gap:10px">'+
+   '<div class="field"><label>Archivo</label>'+photo("entregas_martes14.xlsx · 52 filas",true)+'</div>'+
+   '<p style="margin:0;font-size:13px;color:var(--muted)">Acepta Excel (.xlsx) y CSV. También sirve una planilla de Google exportada.</p><button class="btn" style="align-self:flex-start">Descargar plantilla</button>'+
+   '<div class="lbl" style="margin-top:6px">Columnas reconocidas</div><dl class="kv" style="margin:0;font-size:13px"><dt>Nombre cliente</dt><dd>→ Receptor</dd><dt>Fono</dt><dd>→ Teléfono</dd><dt>Dirección</dt><dd>→ Dirección</dd><dt>Comuna</dt><dd>→ Sector (automático)</dd><dt>Hora</dt><dd>→ Hora comprometida</dd><dt>Cobrar / Monto</dt><dd>→ Pago</dd><dt>Chofer</dt><dd>→ Conductor (opcional)</dd></dl>'+
+   '<div class="banner warn" style="margin-top:4px">'+ico("chat")+'<div><b>O pídeselo al asistente</b><p>«Carga este archivo y reparte las entregas por sector».</p></div></div></div>'+
+   '<div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row" style="flex-wrap:wrap;justify-content:flex-start">'+pill("49 listas","ok")+pill("2 por revisar","warn")+pill("1 con error","late")+'</div>'+
+   '<div class="tw"><table class="t"><thead><tr><th>Fila</th><th>Receptor</th><th>Comuna</th><th>Estado</th></tr></thead><tbody>'+
+   '<tr><td class="mono">2</td><td>Javiera Muñoz</td><td>Providencia</td><td>'+pill("Lista","ok")+'</td></tr>'+
+   '<tr><td class="mono">3</td><td>Pedro Álvarez</td><td>Ñuñoa</td><td>'+pill("Lista","ok")+'</td></tr>'+
+   '<tr><td class="mono">17</td><td>Marcela Díaz</td><td>Maipú</td><td>'+pill("Dirección no encontrada","warn")+'</td></tr>'+
+   '<tr><td class="mono">23</td><td>Felipe Rivas</td><td>La Reina</td><td>'+pill("Posible duplicado de fila 9","warn")+'</td></tr>'+
+   '<tr><td class="mono">40</td><td>Andrea Soto</td><td>Puente Alto</td><td>'+pill("Teléfono incompleto","late")+'</td></tr>'+
+   '</tbody></table></div><div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn y" data-next>Crear 49 entregas</button><button class="btn">Corregir 3 filas</button></div></div></div>');}},
+ {t:"Asistente: códigos", h:"Lunes 19:35", note:"El asistente genera códigos", txt:"Carolina le pide en lenguaje natural los códigos de mañana. El asistente los crea, pero no envía nada.", sys:"Registro: «Carolina pidió generar 4 códigos · 19:35». Ella los manda por privado.",
+  render:function(){return browser("Asistente",'<div class="ahead"><h4>Asistente</h4>'+pill("Solo actúa cuando tú lo pides","y")+'</div><div class="cols"><div class="card msgs">'+
+   msg("Genera los códigos de seguimiento para las entregas de mañana.",1,"Carolina · 19:35")+
+   msg('Listo. Javiera y Pedro ya tienen la app: verán su entrega solos. Para los otros dos:<br><br><span class="mono">Sofía Contreras · RPT-4K7Q-92</span><br><span class="mono">Luis Bravo · RPT-8M2T-41</span><br><br>No envié nada. ¿Quieres que te prepare un texto para mandárselos?',0,"Asistente · 19:35",1)+
+   '<div class="composer"><div class="in">Pídele algo al asistente…</div></div></div>'+
+   '<div class="card"><div class="lbl">Registro de acciones</div><div class="log" style="margin-top:8px"><div>19:35 · Carolina → generar 4 códigos · hecho</div><div>19:30 · Carolina → crear 4 entregas (manual)</div></div></div></div><button class="btn y" style="align-self:flex-start" data-next>Siguiente</button>');}},
+ {t:"Programar mensaje", h:"Lunes 20:00", note:"Mensaje programado", txt:"Carolina programa un aviso con día y hora para todos los conductores. Puede llevar foto o solo texto.", sys:"Se publica en el tablero y llega como notificación a las 08:20.",
+  render:function(){return browser("Programados",'<div class="ahead"><h4>Mensajes programados</h4></div><div class="cols"><div class="card" style="display:flex;flex-direction:column;gap:10px">'+
+   '<div class="field"><label>Para</label>'+seg("para",["Conductores","Receptores"],0)+'</div>'+field("Destinatarios","Todos los conductores (3)")+
+   '<div class="cols" style="grid-template-columns:1fr 1fr">'+field("Día","Martes 14")+field("Hora",'<span class="mono">08:20</span>')+'</div>'+
+   field("Mensaje","Corte de calle en Irarrázaval entre 08:00 y 10:00. Usen Grecia o Simón Bolívar.")+'<div class="field"><label>Foto <span class="opt">(opcional)</span></label>'+photo("Agregar foto")+'</div><button class="btn y" data-next>Programar</button></div>'+
+   '<div class="card"><div class="lbl">Próximos</div><div class="list" style="margin-top:8px"><div class="post"><b>Corte de calle en Irarrázaval</b><div class="meta">Mar 14 · 08:20 · conductores</div></div><div class="post"><b>Recordatorio de feriado</b><div class="meta">Vie 17 · 18:00 · todos</div></div></div></div></div>');}},
+ {t:"Mapa en vivo", h:"10:22", note:"Retraso visible", txt:"Mapa filtrado por sector. Matías aparece en rojo por el retraso sostenido. Llega su reporte con foto.", sys:"Solo se ven conductores en ruta. Los que terminaron su jornada no aparecen.",
+  render:function(){return browser("Mapa en vivo",'<div class="ahead"><h4>Mapa en vivo</h4>'+seg("sec",["Todos","Oriente","Sur"],0)+'</div><div class="cols"><div>'+
+   map({id:7,sectors:1,late:1,h:260,route:"M60 100 L60 150 L200 150 L200 220 L300 220",dest:[300,220],dur:30,others:[[110,90,"var(--ok)"],[250,190,"var(--ok)"]]})+'</div>'+
+   '<div class="list"><div class="banner late">'+ico("flag")+'<div><b>Matías Rojas · 28 min tarde</b><p>Hacia Sofía Contreras (E3). Reporte: «Choque en Vicuña Mackenna».</p></div></div>'+photo("Foto del reporte · 10:23",true)+
+   '<div class="card row"><span><b>Daniela Soto</b><br><small style="color:var(--muted)">Oriente · 3 de 5</small></span>'+pill("A tiempo","ok")+'</div><div class="card row"><span><b>Jorge Vidal</b><br><small style="color:var(--muted)">Sur · 2 de 6</small></span>'+pill("A tiempo","ok")+'</div></div></div><button class="btn y" style="align-self:flex-start" data-next>Siguiente</button>');}},
+ {t:"Asistente: avisar", h:"10:25", note:"Mensaje por lenguaje natural", txt:"Carolina pide avisar a Sofía. El asistente identifica a Sofía, redacta el mensaje y espera la confirmación antes de enviarlo.", sys:"Regla: el asistente nunca escribe a un receptor sin pedido explícito. Queda registrado quién lo pidió, cuándo y qué se envió.",
+  render:function(){return browser("Asistente",'<div class="ahead"><h4>Asistente</h4>'+pill("Solo actúa cuando tú lo pides","y")+'</div><div class="cols"><div class="card msgs">'+
+   msg("Avísale a Sofía que su entrega se atrasa unos 30 minutos por un accidente.",1,"Carolina · 10:25")+
+   '<div class="action-card"><div class="lbl">Mensaje listo para enviar</div><div><b>Para:</b> Sofía Contreras · receptora · Entrega 3 (11:08 aprox.)</div><div class="in" style="border:1px solid var(--line);border-radius:8px;padding:8px">Hola Sofía, tu entrega se atrasa unos 30 minutos por un accidente en Vicuña Mackenna. Llegada aprox. 11:08. — Despachos Cordillera</div><div class="row" style="justify-content:flex-start"><button class="btn y" data-next>Enviar</button><button class="btn">Editar</button><button class="btn">Cancelar</button></div></div>'+
+   msg("También hay un mensaje de Pedro Álvarez sin responder sobre conserjería. ¿Te propongo una respuesta?",0,"Asistente · 10:25",1)+
+   '</div><div class="card"><div class="lbl">Registro de acciones</div><div class="log" style="margin-top:8px"><div>10:25 · Carolina → avisar a Sofía Contreras · esperando confirmación</div><div>19:35 · Carolina → generar 4 códigos · hecho</div></div></div></div>');}},
+ {t:"Mensajes y comprobantes", h:"11:10", note:"Bandeja unificada", txt:"Todo lo que llega al administrador en un solo lugar: chats, reportes, pagos informados y comprobantes de recepción.", sys:"Cada elemento queda ligado a su entrega, como respaldo.",
+  render:function(){return browser("Mensajes",'<div class="ahead"><h4>Bandeja</h4>'+seg("f",["Todo","Reportes","Pagos","Comprobantes"],0)+'</div><div class="tw"><table class="t"><thead><tr><th>Hora</th><th>De</th><th>Tipo</th><th>Entrega</th><th>Estado</th></tr></thead><tbody>'+
+   '<tr><td class="mono">11:09</td><td>Sofía Contreras</td><td>Comprobante de recepción · 2 fotos</td><td class="mono">E3</td><td>'+pill("Nuevo","y")+'</td></tr>'+
+   '<tr><td class="mono">10:23</td><td>Matías Rojas</td><td>Reporte · foto</td><td class="mono">E3</td><td>'+pill("Visto","ok")+'</td></tr>'+
+   '<tr><td class="mono">09:48</td><td>Matías Rojas</td><td>Pago confirmado · $45.990</td><td class="mono">E2</td><td>'+pill("Conciliado","ok")+'</td></tr>'+
+   '<tr><td class="mono">09:40</td><td>Pedro Álvarez</td><td>Pago informado · transferencia</td><td class="mono">E2</td><td>'+pill("Visto","ok")+'</td></tr>'+
+   '<tr><td class="mono">09:20</td><td>Pedro Álvarez</td><td>Chat con conductor</td><td class="mono">E2</td><td>'+pill("Respondido","ok")+'</td></tr>'+
+   '</tbody></table></div><button class="btn y" style="align-self:flex-start" data-next>Siguiente</button>');}},
+ {t:"Cierre del día", h:"12:30", note:"Resumen", txt:"Al final del día: entregas, retrasos, cobros y la entrega sin señal registrada con su hora real.", sys:"La entrega 4 aparece una sola vez, con la hora 11:58 y la marca «sin señal».",
+  render:function(){return browser("Entregas",'<div class="ahead"><h4>Martes 14 · resumen</h4></div>'+
+   '<div class="cols" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="card"><div class="lbl">Entregadas</div><div class="big mono">4/4</div></div><div class="card"><div class="lbl">Con retraso</div><div class="big mono" style="color:var(--late)">1</div></div><div class="card"><div class="lbl">Cobrado</div><div class="big mono">$68.490</div></div></div>'+
+   '<div class="tw"><table class="t"><thead><tr><th>#</th><th>Receptor</th><th>Entregada</th><th>Pago</th><th>Nota</th></tr></thead><tbody>'+
+   '<tr><td class="mono">1</td><td>Javiera Muñoz</td><td class="mono">09:12</td><td>Pagada</td><td></td></tr>'+
+   '<tr><td class="mono">2</td><td>Pedro Álvarez</td><td class="mono">09:48</td><td>$45.990 transf.</td><td>Conserjería</td></tr>'+
+   '<tr><td class="mono">3</td><td>Sofía Contreras</td><td class="mono">11:08</td><td>Pagada</td><td>'+pill("28 min tarde","late")+'</td></tr>'+
+   '<tr><td class="mono">4</td><td>Luis Bravo</td><td class="mono">11:58</td><td>$22.500 efectivo</td><td>'+pill("Sin señal · sincronizada 12:14","warn")+'</td></tr>'+
+   '</tbody></table></div>');}}
+]};
+
+/* ---------- Estado y navegación ---------- */
+var role="conductor", idx=0, lock=false, app=false;
+var stage=document.getElementById("stage"), steps=document.getElementById("steps");
+var titles={conductor:"Pantallas del conductor",receptor:"Pantallas del receptor",admin:"Panel del administrador"};
+
+function draw(){
+  var list=S[role], sc=list[idx];
+  document.getElementById("sideTitle").textContent=titles[role];
+  steps.innerHTML=list.map(function(s,i){return '<li><button data-go="'+i+'" aria-current="'+(i===idx)+'"><span class="n">'+String(i+1).padStart(2,"0")+'</span><span class="t">'+s.t+'</span><span class="h">'+s.h+'</span></button></li>';}).join("");
+  stage.className="stage"+(role==="admin"?" wide":"");
+  var note='<div class="note"><span class="clock">'+sc.h+'</span><h3>'+sc.note+'</h3><p>'+sc.txt+'</p><div class="sys"><b>Qué hace el sistema</b>'+sc.sys+'</div>'+
+    '<div class="nav"><button data-prev '+(idx===0?'disabled':'')+'>‹ Anterior</button><button data-fwd>'+(idx===list.length-1?'Volver al inicio':'Siguiente ›')+'</button></div></div>';
+  stage.innerHTML = role==="admin" ? note+sc.render() : sc.render()+note;
+  try{localStorage.setItem("reparto-proto",JSON.stringify({role:role,idx:idx}));}catch(e){}
+  var tag=(app?"app-":(lock?"solo-":""))+role;
+  if(location.hash!=="#"+tag){try{history.replaceState(null,"","#"+tag);}catch(e){}}
+}
+function go(i){var n=S[role].length; idx=(i+n)%n; draw(); var c=steps.querySelector('[aria-current="true"]'); if(c&&steps.scrollWidth>steps.clientWidth){steps.scrollLeft=c.parentNode.offsetLeft-steps.offsetLeft-steps.clientWidth/2+c.offsetWidth/2;}}
+function setRole(r){role=r; idx=0; document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===r));}); draw();}
+
+document.addEventListener("click",function(ev){
+  var t=ev.target.closest("button"); if(!t) return;
+  if(t.dataset.role){setRole(t.dataset.role);return;}
+  if(t.dataset.go!==undefined){go(+t.dataset.go);return;}
+  if(t.hasAttribute("data-next")||t.hasAttribute("data-fwd")||t.hasAttribute("data-alt")){go(idx+1);return;}
+  if(t.hasAttribute("data-prev")){go(idx-1);return;}
+  if(t.dataset.seg==="modo"&&t.textContent==="Subir archivo"){go(idx+1);return;}
+  if(t.dataset.seg==="modo2"&&t.textContent==="Una por una"){go(idx-1);return;}
+  if(t.dataset.seg){t.parentNode.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-pressed",String(b===t));});}
+});
+
+var h=(location.hash||"").slice(1);
+if(h.indexOf("solo-")===0&&S[h.slice(5)]){h=h.slice(5);lock=true;document.querySelector(".roles").hidden=true;}
+if(S[h]){role=h;} else {try{var st=JSON.parse(localStorage.getItem("reparto-proto")||"null"); if(st&&S[st.role]){role=st.role; idx=Math.min(st.idx||0,S[role].length-1);}}catch(e){}}
+document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===role));});
+var M=window.REPARTO_MODO||null;
+if(!M&&h.indexOf("app-")===0&&S[h.slice(4)]){M={rol:h.slice(4)};}
+if(M&&S[M.rol]){role=M.rol;idx=0;lock=true;app=true;document.body.classList.add("app");document.querySelector(".roles").hidden=true;}
+document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===role));});
+draw();
+})();
+</script>
