@@ -3,7 +3,10 @@
 App de reparto con seguimiento en tiempo real para administradores, conductores y receptores.
 
 ## Estado
-**Etapa D: prerrequisitos** (`docs/05-prerrequisitos.md`). La especificación (`SPEC.md`) está aprobada. Todavía no hay código de la app.
+**En pausa (19-oct-2026).** Etapa D en curso (`docs/05-prerrequisitos.md`).
+- **Bloqueo:** falta el proyecto `reparto-dev` en Supabase. El cliente lo creará cuando pueda pagar el plan.
+- **Secretos pendientes en GitHub:** `SUPABASE_PROJECT_REF` y `SUPABASE_DB_PASSWORD`.
+- **Para retomar:** crear el proyecto, guardar esos dos secretos y decir "listo, seguimos con la Fase 0".
 
 ## Contenido
 - `docs/00-decisiones-etapa-A.md`: respuestas del cliente a la revisión inicial.
