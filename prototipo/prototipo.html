@@ -475,7 +475,7 @@ admin:[
 ]};
 
 /* ---------- Estado y navegación ---------- */
-var role="conductor", idx=0;
+var role="conductor", idx=0, lock=false;
 var stage=document.getElementById("stage"), steps=document.getElementById("steps");
 var titles={conductor:"Pantallas del conductor",receptor:"Pantallas del receptor",admin:"Panel del administrador"};
 
@@ -488,7 +488,8 @@ function draw(){
     '<div class="nav"><button data-prev '+(idx===0?'disabled':'')+'>‹ Anterior</button><button data-fwd>'+(idx===list.length-1?'Volver al inicio':'Siguiente ›')+'</button></div></div>';
   stage.innerHTML = role==="admin" ? note+sc.render() : sc.render()+note;
   try{localStorage.setItem("reparto-proto",JSON.stringify({role:role,idx:idx}));}catch(e){}
-  if(location.hash!=="#"+role){try{history.replaceState(null,"","#"+role);}catch(e){}}
+  var tag=(lock?"solo-":"")+role;
+  if(location.hash!=="#"+tag){try{history.replaceState(null,"","#"+tag);}catch(e){}}
 }
 function go(i){var n=S[role].length; idx=(i+n)%n; draw(); var c=steps.querySelector('[aria-current="true"]'); if(c&&steps.scrollWidth>steps.clientWidth){steps.scrollLeft=c.parentNode.offsetLeft-steps.offsetLeft-steps.clientWidth/2+c.offsetWidth/2;}}
 function setRole(r){role=r; idx=0; document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===r));}); draw();}
@@ -505,6 +506,7 @@ document.addEventListener("click",function(ev){
 });
 
 var h=(location.hash||"").slice(1);
+if(h.indexOf("solo-")===0&&S[h.slice(5)]){h=h.slice(5);lock=true;document.querySelector(".roles").hidden=true;}
 if(S[h]){role=h;} else {try{var st=JSON.parse(localStorage.getItem("reparto-proto")||"null"); if(st&&S[st.role]){role=st.role; idx=Math.min(st.idx||0,S[role].length-1);}}catch(e){}}
 document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===role));});
 draw();
