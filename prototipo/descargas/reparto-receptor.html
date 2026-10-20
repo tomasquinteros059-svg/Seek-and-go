@@ -33,6 +33,7 @@
   --map:#15232e; --map-block:#1c2d3a; --map-street:#284052; --map-river:#1f4560; color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:var(--f-body);font-size:15px;line-height:1.45}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
@@ -216,7 +217,7 @@ body.app .adm{min-height:100vh;min-height:100dvh}
   <section class="stage" id="stage" aria-live="polite"></section>
 </main>
 
-<script>window.REPARTO_MODO={rol:"receptor"};</script>
+<script>window.REPARTO_MODO={rol:"receptor",solo:true};</script>
 <script>
 (function(){
 "use strict";
@@ -529,7 +530,7 @@ if(S[h]){role=h;} else {try{var st=JSON.parse(localStorage.getItem("reparto-prot
 document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===role));});
 var M=window.REPARTO_MODO||null;
 if(!M&&h.indexOf("app-")===0&&S[h.slice(4)]){M={rol:h.slice(4)};}
-if(M&&S[M.rol]){role=M.rol;idx=0;lock=true;app=true;document.body.classList.add("app");document.querySelector(".roles").hidden=true;}
+if(M&&S[M.rol]){role=M.rol;idx=0;lock=true;if(!M.solo){app=true;document.body.classList.add("app");}document.querySelector(".roles").hidden=true;}
 document.querySelectorAll(".roles button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.role===role));});
 draw();
 })();
